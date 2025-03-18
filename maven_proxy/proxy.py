@@ -177,13 +177,12 @@ def verify_password(username, password):
     return None
 
 
-
-
 # 处理根路径请求
 @app.route(f'{browse_context_path}', methods=['GET'])
 @auth.login_required
 def handle_root():
     return generate_directory_listing('')
+
 
 # 处理根路径请求
 @app.route(f'{browse_context_path}/<path:path>', methods=['GET'])
