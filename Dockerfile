@@ -7,7 +7,8 @@ ENV PORT=8081 \
     REMOTE_REPO=https://repo1.maven.org/maven2/ \
     REMOTE_REPO_USERNAME= \
     REMOTE_REPO_PASSWORD= \
-    CONTEXT_PATH="" \
+    REPO_CONTEXT_PATH=/maven2 \
+    BROWSE_CONTEXT_PATH=/browse \
     LOCAL_REPO_DIR=/data/repository \
     TZ=Asia/Shanghai
 

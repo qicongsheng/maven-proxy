@@ -18,7 +18,8 @@ class Config:
         parser.add_argument("--remote-repo-password", type=str, default=os.getenv("REMOTE_REPO_PASSWORD", None))
         parser.add_argument("--auth-user", type=str, default=os.getenv("AUTH_USER", "user"))
         parser.add_argument("--auth-password", type=str, default=os.getenv("AUTH_PASSWORD", "passwd"))
-        parser.add_argument("--context-path", type=str, default=os.getenv("CONTEXT_PATH", ""))
+        parser.add_argument("--repo-context-path", type=str, default=os.getenv("REPO_CONTEXT_PATH", "/maven2"))
+        parser.add_argument("--browse-context-path", type=str, default=os.getenv("BROWSE_CONTEXT_PATH", "/browse"))
         parser.add_argument("--cleanup-interval", type=int, default=int(os.getenv("CLEANUP_INTERVAL", 300)))
         parser.add_argument("--cleanup-age", type=int, default=int(os.getenv("CLEANUP_AGE", 3600)))
         args = parser.parse_args()
@@ -34,8 +35,10 @@ class Config:
         self.REMOTE_REPO_PASSWORD = args.remote_repo_password
         # 部署用户认证
         self.USERS = {args.auth_user: args.auth_password}
-        # 上下文路径（如 /maven2）
-        self.CONTEXT_PATH = args.context_path
+        # repo上下文路径（如 /maven2）
+        self.REPO_CONTEXT_PATH = args.repo_context_path
+        # 浏览器上下文路径（如 /browse）
+        self.BROWSE_CONTEXT_PATH = args.browse_context_path
         # 定时任务配置
         self.CLEANUP_INTERVAL = args.cleanup_interval
         self.CLEANUP_AGE = args.cleanup_age

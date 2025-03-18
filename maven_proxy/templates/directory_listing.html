@@ -67,21 +67,21 @@
     <tbody>
     {% if path != "" %}
     <tr>
-      <td><a href="{{ context_path + '/' + parent_path.rstrip('/') if context_path != '' else parent_path.rstrip('/') if parent_path != '/' else '/'}}" class="dir-icon">../</a></td>
+      <td><a href="{{ browse_context_path + '/' + parent_path.rstrip('/') if browse_context_path != '' else parent_path.rstrip('/') if parent_path != '/' else '/'}}" class="dir-icon">../</a></td>
       <td>-</td>
       <td>-</td>
     </tr>
     {% endif %}
     {% for dir in dirs %}
     <tr>
-      <td><a href="{{ context_path + '/' + path.rstrip('/') + '/' + dir if path != '' else context_path + '/' + dir }}" class="dir-icon">{{ dir }}</a></td>
+      <td><a href="{{ browse_context_path + '/' + path.rstrip('/') + '/' + dir if path != '' else browse_context_path + '/' + dir }}" class="dir-icon">{{ dir }}</a></td>
       <td>{{ get_last_modified(os.path.join(local_path, dir)) }}</td>
       <td>-</td>
     </tr>
     {% endfor %}
     {% for file in files %}
     <tr>
-      <td><a href="{{ context_path +  '/' + path.rstrip('/') + '/' + file if path != '' else context_path + '/' + file }}" class="file-icon">{{ file }}</a></td>
+      <td><a href="{{ repo_context_path +  '/' + path.rstrip('/') + '/' + file if path != '' else repo_context_path + '/' + file }}" class="file-icon">{{ file }}</a></td>
       <td>{{ get_last_modified(os.path.join(local_path, file)) }}</td>
       <td>{{ get_file_size(os.path.join(local_path, file)) }}</td>
     </tr>

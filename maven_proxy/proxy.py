@@ -21,7 +21,8 @@ auth = HTTPBasicAuth()
 config = Config()
 app.config.from_object(config)
 app.url_map.strict_slashes = False
-context_path = app.config['CONTEXT_PATH']
+repo_context_path = app.config['REPO_CONTEXT_PATH']
+browse_context_path = app.config['BROWSE_CONTEXT_PATH']
 
 
 # 获取本地路径
@@ -122,7 +123,8 @@ def generate_directory_listing(path):
     return render_template(
         "directory_listing.html",
         path=path,
-        context_path=context_path,
+        repo_context_path=repo_context_path,
+        browse_context_path=browse_context_path,
         parent_path=parent_path,
         local_path=local_path,
         dirs=dirs,
@@ -175,14 +177,22 @@ def verify_password(username, password):
     return None
 
 
+
+
 # 处理根路径请求
-@app.route(f'{context_path}/', methods=['GET'])
+@app.route(f'{browse_context_path}', methods=['GET'])
 @auth.login_required
 def handle_root():
-    return handle_get("")
+    return generate_directory_listing('')
+
+# 处理根路径请求
+@app.route(f'{browse_context_path}/<path:path>', methods=['GET'])
+@auth.login_required
+def handle_browse(path):
+    return generate_directory_listing(path)
 
 
-@app.route(f'{context_path}/<path:path>', methods=['GET', 'PUT', 'HEAD'])
+@app.route(f'{repo_context_path}/<path:path>', methods=['GET', 'PUT', 'HEAD'])
 @auth.login_required
 def handle_path(path):
     if request.method == 'GET':
@@ -198,12 +208,6 @@ def handle_get(path):
     local_path = get_local_path(path)
     if os.path.isfile(local_path):
         return send_from_directory(os.path.dirname(local_path), os.path.basename(local_path))
-    elif os.path.isdir(local_path):
-        listing = generate_directory_listing(path)
-        if listing:
-            return listing
-        else:
-            abort(404)
     else:
         # 如果是 maven-metadata.xml，特殊处理
         if path.endswith("maven-metadata.xml"):
@@ -269,7 +273,8 @@ def cleanup_empty_folders():
 
 
 def startup():
-    print(f"context_path={app.config['CONTEXT_PATH']}")
+    print(f"repo_context_path={app.config['REPO_CONTEXT_PATH']}")
+    print(f"browse_context_path={app.config['BROWSE_CONTEXT_PATH']}")
     print(f"local_repo_dir={config.REPO_ROOT}")
     print(f"remote_repo={config.REMOTE_REPO}")
     # 初始化定时任务
