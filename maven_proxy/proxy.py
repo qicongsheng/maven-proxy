@@ -12,6 +12,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, request, send_from_directory, abort, Response, render_template, redirect
 from flask_httpauth import HTTPBasicAuth
 
+from maven_proxy import help
 from maven_proxy.config import Config
 
 app = Flask(__name__)
@@ -279,6 +280,7 @@ def cleanup_empty_folders():
 
 
 def startup():
+    print(f"Maven Proxy {help.get_version()}")
     print(f"repo_context_path={app.config['REPO_CONTEXT_PATH']}")
     print(f"browse_context_path={app.config['BROWSE_CONTEXT_PATH']}")
     print(f"local_repo_dir={config.REPO_ROOT}")

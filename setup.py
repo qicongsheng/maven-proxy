@@ -3,9 +3,11 @@
 # Author: qicongsheng
 from setuptools import setup, find_packages
 
+from maven_proxy import help
+
 setup(
     name="maven-proxy",
-    version="1.0.70",
+    version=help.get_version(),
     author="qicongsheng",
     author_email="qicongsheng@outlook.com",
     description="Maven Repository Proxy with caching and authentication",
