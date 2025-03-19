@@ -9,7 +9,7 @@ from xml.etree import ElementTree as ET
 
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, request, send_from_directory, abort, Response, render_template
+from flask import Flask, request, send_from_directory, abort, Response, render_template, redirect
 from flask_httpauth import HTTPBasicAuth
 
 from maven_proxy.config import Config
@@ -177,6 +177,13 @@ def verify_password(username, password):
     return None
 
 
+# 处理域名路径请求
+@app.route(f'/', methods=['GET'])
+@auth.login_required
+def handle_domain():
+    return redirect('/browse')
+
+
 # 处理根路径请求
 @app.route(f'{browse_context_path}', methods=['GET'])
 @auth.login_required
@@ -184,7 +191,7 @@ def handle_root():
     return generate_directory_listing('')
 
 
-# 处理根路径请求
+# 处理browse路径请求
 @app.route(f'{browse_context_path}/<path:path>', methods=['GET'])
 @auth.login_required
 def handle_browse(path):
