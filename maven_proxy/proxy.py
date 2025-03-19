@@ -286,11 +286,11 @@ def startup():
     print(f"local_repo_dir={config.REPO_ROOT}")
     print(f"remote_repo={config.REMOTE_REPO}")
     # 初始化定时任务
-    print("Job of cleanup of empty folders job starting...")
+    print("Job of cleanup of empty folders starting...")
     scheduler = BackgroundScheduler()
     scheduler.add_job(cleanup_empty_folders, 'interval', seconds=app.config['CLEANUP_INTERVAL'])
     scheduler.start()
-    print("Job of cleanup of empty folders job end...")
+    print("Job of cleanup of empty folders started")
     app.run(host='0.0.0.0', port=config.PORT, threaded=True)
 
 
