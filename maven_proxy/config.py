@@ -13,7 +13,7 @@ class Config:
         parser.add_argument("--local-repo-dir", type=str,
                             default=os.getenv("LOCAL_REPO_DIR", os.path.expanduser("~/.m2/repository")))
         parser.add_argument("--remote-repo", type=str,
-                            default=os.getenv("REMOTE_REPO", "https://repo.maven.apache.org/maven2"))
+                            default=os.getenv("REMOTE_REPO", "https://repo.maven.apache.org/maven2/"))
         parser.add_argument("--remote-repo-username", type=str, default=os.getenv("REMOTE_REPO_USERNAME", None))
         parser.add_argument("--remote-repo-password", type=str, default=os.getenv("REMOTE_REPO_PASSWORD", None))
         parser.add_argument("--auth-user", type=str, default=os.getenv("AUTH_USER", "user"))

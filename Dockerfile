@@ -4,7 +4,7 @@ MAINTAINER qicongsheng
 ENV PORT=8081 \
     AUTH_USER=user \
     AUTH_PASSWORD=passwd \
-    REMOTE_REPO=https://repo1.maven.org/maven2/ \
+    REMOTE_REPO=https://repo.maven.apache.org/maven2/ \
     REMOTE_REPO_USERNAME= \
     REMOTE_REPO_PASSWORD= \
     REPO_CONTEXT_PATH=/maven2 \
