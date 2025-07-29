@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # Author: qicongsheng
-from . import proxy
+from maven_proxy import proxy
 
 
 def main():
