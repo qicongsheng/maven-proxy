@@ -3,19 +3,18 @@
 # Author: qicongsheng
 import hashlib
 import os
-import time
-from datetime import datetime
-from xml.etree import ElementTree as ET
-
 import requests
-from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, request, send_from_directory, abort, Response, render_template, redirect, session, url_for
+import time
 import uuid
+from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import datetime
+from datetime import timedelta
+from flask import Flask, request, send_from_directory, abort, Response, render_template, redirect, session, url_for
 from flask_httpauth import HTTPBasicAuth
+from xml.etree import ElementTree as ET
 
 from maven_proxy import help
 from maven_proxy.config import Config
-from datetime import timedelta
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
