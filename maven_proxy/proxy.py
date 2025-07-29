@@ -9,11 +9,13 @@ from xml.etree import ElementTree as ET
 
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, request, send_from_directory, abort, Response, render_template, redirect
+from flask import Flask, request, send_from_directory, abort, Response, render_template, redirect, session, url_for
+import uuid
 from flask_httpauth import HTTPBasicAuth
 
 from maven_proxy import help
 from maven_proxy.config import Config
+from datetime import timedelta
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
@@ -22,6 +24,8 @@ auth = HTTPBasicAuth()
 config = Config()
 app.config.from_object(config)
 app.url_map.strict_slashes = False
+app.secret_key = str(uuid.uuid4())
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 repo_context_path = app.config['REPO_CONTEXT_PATH']
 browse_context_path = app.config['BROWSE_CONTEXT_PATH']
 
@@ -173,6 +177,8 @@ def handle_metadata(path):
 # 验证用户
 @auth.verify_password
 def verify_password(username, password):
+    if 'user_id' in session:
+        return session['user_id']
     if username in app.config['USERS'] and app.config['USERS'][username] == password:
         return username
     return None
@@ -194,6 +200,14 @@ def handle_domain():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if verify_password(username, password):
+            session['user_id'] = str(uuid.uuid4())
+            session.permanent = True  # 启用超时设置
+            return redirect('/browse')
+        return "无效的凭据", 401
     return render_template("login.html")
 
 
