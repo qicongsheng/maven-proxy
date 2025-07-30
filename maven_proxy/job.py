@@ -15,13 +15,13 @@ app = config.app
 # 定时随机补全sources.jar/javadoc.jar
 def auto_download_remote_files_by_dirs():
     while True:
-        try:
-            print("Starting auto download remote files...")
-            # 遍历 REPO_ROOT 目录
-            for root, dirs, files in os.walk(app.config['REPO_ROOT'], topdown=False):
-                for pom_file_name in files:
-                    pom_file_path = os.path.join(root, pom_file_name)
-                    if pom_file_path.lower().endswith('.pom'):
+        print("Starting auto download remote files...")
+        # 遍历 REPO_ROOT 目录
+        for root, dirs, files in os.walk(app.config['REPO_ROOT'], topdown=False):
+            for pom_file_name in files:
+                pom_file_path = os.path.join(root, pom_file_name)
+                if pom_file_path.lower().endswith('.pom'):
+                    try:
                         group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
                         # 文件不存在，从远程下载
                         if packaging == 'jar':
@@ -32,9 +32,9 @@ def auto_download_remote_files_by_dirs():
                             auto_download_remote_file(root, pom_file_name, '-sources.jar.sha1')
                             auto_download_remote_file(root, pom_file_name, '-javadoc.jar')
                             auto_download_remote_file(root, pom_file_name, '-javadoc.jar.sha1')
-            print("Auto download remote files end.")
-        except:
-            traceback.print_exc()
+                    except:
+                        traceback.print_exc()
+        print("Auto download remote files end.")
         time.sleep(app.config['AUTO_DOWNLOAD_INTERVAL'])
 
 

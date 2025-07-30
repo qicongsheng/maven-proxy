@@ -75,6 +75,7 @@ def build_remote_path(group_id, artifact_id, version, type):
 # 从远程仓库获取文件
 def fetch_from_remote(path):
     remote_url = app.config['REMOTE_REPO'] + path
+    print(f'fetching from remote: {remote_url}')
     try:
         auth = None
         if app.config['REMOTE_REPO_USERNAME'] and app.config['REMOTE_REPO_PASSWORD']:
@@ -87,6 +88,7 @@ def fetch_from_remote(path):
                 f.write(resp.content)
             print(f'fetched from remote: {remote_url}')
             return True
+        print(f'fetch failed from remote: {remote_url}')
         return False
     except Exception as e:
         print(f"Remote fetch failed: {e}")
