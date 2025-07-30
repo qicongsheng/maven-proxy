@@ -27,7 +27,8 @@ class Config:
         parser.add_argument("--cleanup-interval", type=int, default=int(os.getenv("CLEANUP_INTERVAL", 300)))
         parser.add_argument("--cleanup-age", type=int, default=int(os.getenv("CLEANUP_AGE", 3600)))
         parser.add_argument("--auto-download-interval", type=int, default=int(os.getenv("AUTO_DOWNLOAD_INTERVAL", 300)))
-        parser.add_argument("--permanent-session-lifetime", type=int, default=int(os.getenv("PERMANENT_SESSION_LIFETIME", 30)))
+        parser.add_argument("--permanent-session-lifetime", type=int,
+                            default=int(os.getenv("PERMANENT_SESSION_LIFETIME", 30)))
         args = parser.parse_args()
 
         # 本地仓库端口
@@ -57,5 +58,6 @@ class Config:
         app.secret_key = str(uuid.uuid4())
         app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=self.PERMANENT_SESSION_LIFETIME)
         self.app = app
+
 
 app_config = Config()

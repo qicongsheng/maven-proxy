@@ -25,8 +25,6 @@ repo_context_path = app.config['REPO_CONTEXT_PATH']
 browse_context_path = app.config['BROWSE_CONTEXT_PATH']
 
 
-
-
 # 生成空的 maven-metadata.xml
 def generate_empty_metadata(path):
     metadata = ET.Element("metadata")
@@ -247,8 +245,6 @@ def handle_put(path):
         return Response("Deployment successful", 201)
     except Exception as e:
         return Response(f"Deployment failed: {str(e)}", 500)
-
-
 
 
 def startup():
