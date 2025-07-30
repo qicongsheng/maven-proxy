@@ -40,7 +40,7 @@ def auto_download_remote_file(root, pom_file_name, file_type):
                 jar_file = utils.replace_last_occurrence(pom_file_name, '.pom', file_type)
                 # 不存在jar文件，则下载
                 if not os.path.exists(os.path.join(root, jar_file)):
-                    remote_path = utils.get_remote_path(group_id, artifact_id, version, file_type)
+                    remote_path = utils.build_remote_path(group_id, artifact_id, version, file_type)
                     utils.fetch_from_remote(remote_path)
     except Exception as e:
         print(f"Failed to download source jars {pom_file_name}: {e}")

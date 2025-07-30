@@ -60,7 +60,7 @@ def get_local_path(path):
     return os.path.join(app.config['REPO_ROOT'], path)
 
 # 根据坐标拼接相对路径目录
-def get_remote_path(group_id, artifact_id, version, type):
+def build_remote_path(group_id, artifact_id, version, type):
     return group_id.replace('.', '/') + '/' + artifact_id + '/' + version + '/' + artifact_id + '-' + version + type
 
 # 从远程仓库获取文件
@@ -76,7 +76,7 @@ def fetch_from_remote(path):
             os.makedirs(os.path.dirname(local_path), exist_ok=True)
             with open(local_path, 'wb') as f:
                 f.write(resp.content)
-            print(f'fetched from remote:{remote_url}')
+            print(f'fetched from remote: {remote_url}')
             return True
         return False
     except Exception as e:
