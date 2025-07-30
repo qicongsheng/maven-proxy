@@ -3,6 +3,10 @@
 # Author: qicongsheng
 import argparse
 import os
+import uuid
+from datetime import timedelta
+
+from flask import Flask
 
 
 class Config:
@@ -22,6 +26,8 @@ class Config:
         parser.add_argument("--browse-context-path", type=str, default=os.getenv("BROWSE_CONTEXT_PATH", "/browse"))
         parser.add_argument("--cleanup-interval", type=int, default=int(os.getenv("CLEANUP_INTERVAL", 300)))
         parser.add_argument("--cleanup-age", type=int, default=int(os.getenv("CLEANUP_AGE", 3600)))
+        parser.add_argument("--auto-download-interval", type=int, default=int(os.getenv("AUTO_DOWNLOAD_INTERVAL", 300)))
+        parser.add_argument("--permanent-session-lifetime", type=int, default=int(os.getenv("PERMANENT_SESSION_LIFETIME", 30)))
         args = parser.parse_args()
 
         # 本地仓库端口
@@ -42,3 +48,14 @@ class Config:
         # 定时任务配置
         self.CLEANUP_INTERVAL = args.cleanup_interval
         self.CLEANUP_AGE = args.cleanup_age
+        self.AUTO_DOWNLOAD_INTERVAL = args.auto_download_interval
+        self.PERMANENT_SESSION_LIFETIME = args.permanent_session_lifetime
+
+        app = Flask(__name__)
+        app.config.from_object(self)
+        app.url_map.strict_slashes = False
+        app.secret_key = str(uuid.uuid4())
+        app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=self.PERMANENT_SESSION_LIFETIME)
+        self.app = app
+
+app_config = Config()
