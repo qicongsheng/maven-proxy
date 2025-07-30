@@ -5,7 +5,10 @@ import argparse
 import os
 import uuid
 from datetime import timedelta
+
 from flask import Flask
+
+
 class Config:
     def __init__(self):
         # 解析命令行参数
@@ -55,5 +58,6 @@ class Config:
         app.secret_key = str(uuid.uuid4())
         app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=self.PERMANENT_SESSION_LIFETIME)
         self.app = app
+
 
 app_config = Config()

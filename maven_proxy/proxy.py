@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # Author: qicongsheng
-import hashlib
 import os
 import uuid
-from datetime import datetime
-from xml.etree import ElementTree as ET
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import request, send_from_directory, abort, Response, \
@@ -16,11 +13,14 @@ from maven_proxy import help
 from maven_proxy import utils
 from maven_proxy.config import app_config as config
 from maven_proxy.job import cleanup_empty_folders, auto_download_remote_files_by_dirs
+
 auth = HTTPBasicAuth()
 # 创建全局配置对象
 app = config.app
 repo_context_path = app.config['REPO_CONTEXT_PATH']
 browse_context_path = app.config['BROWSE_CONTEXT_PATH']
+
+
 # 验证用户
 @auth.verify_password
 def verify_password(username, password):
@@ -29,22 +29,28 @@ def verify_password(username, password):
     if username in app.config['USERS'] and app.config['USERS'][username] == password:
         return username
     return None
+
+
 @auth.error_handler
 def auth_error(status):
     if status == 401:
         return redirect('/login')  # 重定向到登录页面的路由
     return None
+
+
 # 处理域名路径请求
 @app.route(f'/', methods=['GET'])
 @auth.login_required
 def handle_domain():
     return redirect('/browse')
 
+
 # 处理根路径请求
 @app.route(f'{browse_context_path}', methods=['GET'])
 @auth.login_required
 def handle_root():
     return generate_directory_listing('')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -58,11 +64,13 @@ def login():
         return "无效的凭据", 401
     return render_template("login.html", version=help.get_version())
 
+
 # 处理browse路径请求
 @app.route(f'{browse_context_path}/<path:path>', methods=['GET'])
 @auth.login_required
 def handle_browse(path):
     return generate_directory_listing(path)
+
 
 @app.route(f'{repo_context_path}/<path:path>', methods=['GET', 'PUT', 'HEAD'])
 @auth.login_required
@@ -73,6 +81,8 @@ def handle_path(path):
         return handle_put(path)
     elif request.method == 'HEAD':
         return handle_head(path)
+
+
 # 处理 GET 请求
 def handle_get(path):
     local_path = utils.get_local_path(path)
@@ -86,12 +96,16 @@ def handle_get(path):
         if utils.fetch_from_remote(path):
             return send_from_directory(os.path.dirname(local_path), os.path.basename(local_path))
         abort(404)
+
+
 # 处理 HEAD 请求
 def handle_head(path):
     local_path = utils.get_local_path(path)
     if os.path.exists(local_path):
         return Response(headers={'Content-Length': os.path.getsize(local_path)})
     abort(404)
+
+
 # 处理 PUT 请求（需要认证）
 def handle_put(path):
     local_path = utils.get_local_path(path)
@@ -110,6 +124,8 @@ def handle_put(path):
         return Response("Deployment successful", 201)
     except Exception as e:
         return Response(f"Deployment failed: {str(e)}", 500)
+
+
 # 生成文件列表的 HTML 页面（Nginx 风格）
 def generate_directory_listing(path):
     local_path = utils.get_local_path(path)
@@ -150,6 +166,8 @@ def generate_directory_listing(path):
         get_last_modified=utils.get_last_modified,
         get_file_size=utils.get_file_size
     )
+
+
 # 处理 maven-metadata.xml 请求
 def handle_metadata(path):
     local_path = utils.get_local_path(path)
@@ -182,6 +200,7 @@ def handle_metadata(path):
     return send_from_directory(
         os.path.dirname(local_path),
         os.path.basename(local_path))
+
 
 def startup():
     print(f"Maven Proxy {help.get_version()}")

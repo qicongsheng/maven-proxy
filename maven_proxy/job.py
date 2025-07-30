@@ -3,9 +3,12 @@
 # Author: qicongsheng
 import os
 import time
+
 from maven_proxy import utils
 from maven_proxy.config import app_config as config
+
 app = config.app
+
 
 # 定时随机补全sources.jar/javadoc.jar
 def auto_download_remote_files_by_dirs():
@@ -29,6 +32,7 @@ def auto_download_remote_files_by_dirs():
                 print(f"Failed to download source jars {pom_file_name}: {e}")
     print("Starting auto download source jars end...")
 
+
 # 自动下载指定文件
 def auto_download_remote_file(root, pom_file_name, file_type):
     pom_file_path = os.path.join(root, pom_file_name)
@@ -44,8 +48,6 @@ def auto_download_remote_file(root, pom_file_name, file_type):
                     utils.fetch_from_remote(remote_path)
     except Exception as e:
         print(f"Failed to download source jars {pom_file_name}: {e}")
-
-
 
 
 # 定时清理空文件夹
