@@ -50,79 +50,87 @@ def fetch_from_remote(path):
 
 # 尝试将XML文件解析为POM并提取坐标信息
 def parse_pom_xml(xml_file):
-    ns = {'mvn': 'http://maven.apache.org/POM/4.0.0'}
-    try:
-        tree = ET.parse(xml_file)
-        root = tree.getroot()
+  ns = {'mvn': 'http://maven.apache.org/POM/4.0.0'}
+  try:
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
 
-        # 检查是否是有效的POM文件
-        if root.tag not in ['{http://maven.apache.org/POM/4.0.0}project', 'project']:
-            print(f"跳过非POM文件: {xml_file} (根元素: {root.tag})")
-            return None
+    # 检查是否是有效的POM文件
+    if root.tag not in ['{http://maven.apache.org/POM/4.0.0}project', 'project']:
+      print(f"跳过非POM文件: {xml_file} (根元素: {root.tag})")
+      return None
 
-        # 提取当前项目信息
-        group_id = None
-        artifact_id = None
-        version = None
+    # 提取当前项目信息
+    group_id = None
+    artifact_id = None
+    version = None
+    packaging = "jar"  # Maven默认打包类型是jar
 
-        # 处理带命名空间的POM
-        if root.tag.startswith('{'):
-            group_id = root.findtext('mvn:groupId', namespaces=ns)
-            artifact_id = root.findtext('mvn:artifactId', namespaces=ns)
-            version = root.findtext('mvn:version', namespaces=ns)
+    # 处理带命名空间的POM
+    if root.tag.startswith('{'):
+      group_id = root.findtext('mvn:groupId', namespaces=ns)
+      artifact_id = root.findtext('mvn:artifactId', namespaces=ns)
+      version = root.findtext('mvn:version', namespaces=ns)
+      # 解析packaging字段
+      packaging_elem = root.find('mvn:packaging', namespaces=ns)
+      if packaging_elem is not None and packaging_elem.text:
+        packaging = packaging_elem.text
 
-            # 检查父项目信息
-            parent = root.find('mvn:parent', namespaces=ns)
-            if parent is not None:
-                if group_id is None:
-                    group_id = parent.findtext('mvn:groupId', namespaces=ns)
-                if version is None:
-                    version = parent.findtext('mvn:version', namespaces=ns)
-        else:
-            # 处理不带命名空间的POM
-            group_id = root.findtext('groupId')
-            artifact_id = root.findtext('artifactId')
-            version = root.findtext('version')
-
-            # 检查父项目信息
-            parent = root.find('parent')
-            if parent is not None:
-                if group_id is None:
-                    group_id = parent.findtext('groupId')
-                if version is None:
-                    version = parent.findtext('version')
-
-        # 尝试从properties中查找版本
-        if version is None:
-            properties = root.find('mvn:properties', namespaces=ns) if root.tag.startswith('{') else root.find(
-                'properties')
-            if properties is not None:
-                version_properties = [
-                    ('revision', ns if root.tag.startswith('{') else None),
-                    ('project.version', ns if root.tag.startswith('{') else None),
-                    ('version', ns if root.tag.startswith('{') else None)
-                ]
-
-                for prop, ns_dict in version_properties:
-                    if ns_dict:
-                        version = properties.findtext(f'mvn:{prop}', namespaces=ns)
-                    else:
-                        version = properties.findtext(prop)
-                    if version:
-                        break
-
-        # 确保关键字段存在
-        if artifact_id is None:
-            artifact_id = "UNKNOWN_ARTIFACT_ID"
+      # 检查父项目信息
+      parent = root.find('mvn:parent', namespaces=ns)
+      if parent is not None:
         if group_id is None:
-            group_id = "UNKNOWN_GROUP_ID"
+          group_id = parent.findtext('mvn:groupId', namespaces=ns)
         if version is None:
-            version = "UNKNOWN_VERSION"
+          version = parent.findtext('mvn:version', namespaces=ns)
+    else:
+      # 处理不带命名空间的POM
+      group_id = root.findtext('groupId')
+      artifact_id = root.findtext('artifactId')
+      version = root.findtext('version')
+      # 解析packaging字段
+      packaging_elem = root.find('packaging')
+      if packaging_elem is not None and packaging_elem.text:
+        packaging = packaging_elem.text
 
-        return group_id, artifact_id, version
-    except ET.ParseError:
-        print(f"XML解析错误: {xml_file} - 可能不是有效的XML文件")
-        return None, None, None
-    except Exception as e:
-        print(f"解析 {xml_file} 时出错: {str(e)}")
-        return None, None, None
+      # 检查父项目信息
+      parent = root.find('parent')
+      if parent is not None:
+        if group_id is None:
+          group_id = parent.findtext('groupId')
+        if version is None:
+          version = parent.findtext('version')
+
+    # 尝试从properties中查找版本
+    if version is None:
+      properties = root.find('mvn:properties', namespaces=ns) if root.tag.startswith('{') else root.find('properties')
+      if properties is not None:
+        version_properties = [
+          ('revision', ns if root.tag.startswith('{') else None),
+          ('project.version', ns if root.tag.startswith('{') else None),
+          ('version', ns if root.tag.startswith('{') else None)
+        ]
+
+        for prop, ns_dict in version_properties:
+          if ns_dict:
+            version = properties.findtext(f'mvn:{prop}', namespaces=ns)
+          else:
+            version = properties.findtext(prop)
+          if version:
+            break
+
+    # 确保关键字段存在
+    if artifact_id is None:
+      artifact_id = "UNKNOWN_ARTIFACT_ID"
+    if group_id is None:
+      group_id = "UNKNOWN_GROUP_ID"
+    if version is None:
+      version = "UNKNOWN_VERSION"
+
+    return group_id, artifact_id, version, packaging
+  except ET.ParseError:
+    print(f"XML解析错误: {xml_file} - 可能不是有效的XML文件")
+    return None, None, None, None
+  except Exception as e:
+    print(f"解析 {xml_file} 时出错: {str(e)}")
+    return None, None, None, None
