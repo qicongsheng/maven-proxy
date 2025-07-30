@@ -34,15 +34,16 @@ def auto_download_remote_files_by_dirs():
 def auto_download_remote_file(root, pom_file_name, file_type):
     pom_file_path = os.path.join(root, pom_file_name)
     try:
-        if pom_file_path.lower().endswith('.pom'):
-            group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
-            # 文件不存在，从远程下载
-            if packaging == 'jar':
-                jar_file = utils.replace_last_occurrence(pom_file_name, '.pom', file_type)
-                # 不存在jar文件，则下载
-                if not os.path.exists(os.path.join(root, jar_file)):
-                    remote_path = utils.build_remote_path(group_id, artifact_id, version, file_type)
-                    utils.fetch_from_remote(remote_path)
+        if not pom_file_path.lower().endswith('.pom'):
+            return
+        group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
+        # 文件不存在，从远程下载
+        if packaging == 'jar':
+            jar_file = utils.replace_last_occurrence(pom_file_name, '.pom', file_type)
+            # 不存在jar文件，则下载
+            if not os.path.exists(os.path.join(root, jar_file)):
+                remote_path = utils.build_remote_path(group_id, artifact_id, version, file_type)
+                utils.fetch_from_remote(remote_path)
     except Exception as e:
         print(f"Failed to auto download remote file {pom_file_name}: {e}")
 
