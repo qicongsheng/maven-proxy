@@ -19,14 +19,15 @@ def auto_download_sources_by_dirs():
             pom_file_path = os.path.join(root, pom_file_name)
             try:
                 if pom_file_path.lower().endswith('.pom'):
-                    group_id, artifact_id, version = utils.parse_pom_xml(pom_file_path)
+                    group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
                     # 文件不存在，从远程下载
-                    auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '.jar')
-                    auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '.jar.sha1')
-                    auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-sources.jar')
-                    auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-sources.jar.sha1')
-                    auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-javadoc.jar')
-                    auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-javadoc.jar.sha1')
+                    if packaging == 'jar':
+                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '.jar')
+                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '.jar.sha1')
+                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-sources.jar')
+                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-sources.jar.sha1')
+                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-javadoc.jar')
+                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-javadoc.jar.sha1')
             except Exception as e:
                 print(f"Failed to download source jars {pom_file_name}: {e}")
     print("Starting auto download source jars end...")
