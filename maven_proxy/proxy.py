@@ -33,14 +33,13 @@ def verify_password(username, password):
 
 @auth.error_handler
 def auth_error(status):
-    if status == 401:
+    if request.path.startswith(browse_context_path) and status == 401:
         return redirect('/login')  # 重定向到登录页面的路由
-    return None
+    return "Authentication failed", status, {'X-Custom': 'Header', 'Content-Type': 'text/plain'}
 
 
 # 处理域名路径请求
 @app.route(f'/', methods=['GET'])
-@auth.login_required
 def handle_domain():
     return redirect('/browse')
 
