@@ -52,7 +52,7 @@ class Config:
         self.AUTO_DOWNLOAD_INTERVAL = args.auto_download_interval
         self.PERMANENT_SESSION_LIFETIME = args.permanent_session_lifetime
 
-        app = Flask('Maven-Proxy')
+        app = Flask('Maven-Proxy', template_folder='./templates')
         app.config.from_object(self)
         app.url_map.strict_slashes = False
         app.secret_key = str(uuid.uuid4())
