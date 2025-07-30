@@ -3,14 +3,52 @@
 # Author: qicongsheng
 import os
 import xml.etree.ElementTree as ET
-
+import hashlib
+import os
+import uuid
+from datetime import datetime
+from xml.etree import ElementTree as ET
 import requests
-
 from maven_proxy.config import app_config as config
-
 app = config.app
 
+# 生成空的 maven-metadata.xml
+def generate_empty_metadata(path):
+  metadata = ET.Element("metadata")
+  group_id, artifact_id = path.split("/")[-3:-1]
+  ET.SubElement(metadata, "groupId").text = group_id
+  ET.SubElement(metadata, "artifactId").text = artifact_id
+  ET.SubElement(metadata, "versioning")
+  return ET.tostring(metadata, encoding="utf-8", xml_declaration=True)
 
+# 生成文件的 SHA1 校验值
+def generate_sha1(content):
+  sha1 = hashlib.sha1()
+  sha1.update(content)
+  return sha1.hexdigest()
+
+# 生成文件的 MD5 校验值
+def generate_md5(content):
+  md5 = hashlib.md5()
+  md5.update(content)
+  return md5.hexdigest()
+
+# 辅助函数：获取文件的最后修改时间
+def get_last_modified(file_path):
+  timestamp = os.path.getmtime(file_path)
+  return datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
+
+# 辅助函数：获取文件大小
+def get_file_size(file_path):
+  size = os.path.getsize(file_path)
+  if size < 1024:
+    return f"{size} B"
+  elif size < 1024 * 1024:
+    return f"{size / 1024:.2f} KB"
+  else:
+    return f"{size / (1024 * 1024):.2f} MB"
+
+# 替换最后一个字符串
 def replace_last_occurrence(str_value, old, new):
     parts = str_value.rsplit(old, 1)  # 从右侧分割一次
     if len(parts) == 1:
@@ -22,10 +60,9 @@ def replace_last_occurrence(str_value, old, new):
 def get_local_path(path):
     return os.path.join(app.config['REPO_ROOT'], path)
 
-
+# 根据坐标拼接相对路径目录
 def get_remote_path(group_id, artifact_id, version, type):
     return group_id.replace('.', '/') + '/' + artifact_id + '/' + version + '/' + artifact_id + '-' + version + type
-
 
 # 从远程仓库获取文件
 def fetch_from_remote(path):
@@ -46,7 +83,6 @@ def fetch_from_remote(path):
     except Exception as e:
         print(f"Remote fetch failed: {e}")
         return False
-
 
 # 尝试将XML文件解析为POM并提取坐标信息
 def parse_pom_xml(xml_file):
@@ -134,3 +170,4 @@ def parse_pom_xml(xml_file):
   except Exception as e:
     print(f"解析 {xml_file} 时出错: {str(e)}")
     return None, None, None, None
+

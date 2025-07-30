@@ -3,12 +3,9 @@
 # Author: qicongsheng
 import os
 import time
-
 from maven_proxy import utils
 from maven_proxy.config import app_config as config
-
 app = config.app
-
 
 # 定时随机补全sources.jar/javadoc.jar
 def auto_download_sources_by_dirs():
@@ -32,7 +29,7 @@ def auto_download_sources_by_dirs():
                 print(f"Failed to download source jars {pom_file_name}: {e}")
     print("Starting auto download source jars end...")
 
-
+# 自动下载指定文件
 def auto_download_sources(root, pom_file_name, group_id, artifact_id, version, type):
     # 不存在jar文件，则下载
     jar_file = utils.replace_last_occurrence(pom_file_name, '.pom', type)
