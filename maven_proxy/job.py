@@ -8,7 +8,7 @@ from maven_proxy.config import app_config as config
 app = config.app
 
 # 定时随机补全sources.jar/javadoc.jar
-def auto_download_sources_by_dirs():
+def auto_download_remote_files_by_dirs():
     print("Starting auto download source jars...")
     # 遍历 REPO_ROOT 目录
     for root, dirs, files in os.walk(app.config['REPO_ROOT'], topdown=False):
@@ -19,23 +19,33 @@ def auto_download_sources_by_dirs():
                     group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
                     # 文件不存在，从远程下载
                     if packaging == 'jar':
-                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '.jar')
-                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '.jar.sha1')
-                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-sources.jar')
-                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-sources.jar.sha1')
-                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-javadoc.jar')
-                      auto_download_sources(root, pom_file_name, group_id, artifact_id, version, '-javadoc.jar.sha1')
+                        auto_download_remote_file(root, pom_file_name, '.jar')
+                        auto_download_remote_file(root, pom_file_name, '.jar.sha1')
+                        auto_download_remote_file(root, pom_file_name, '-sources.jar')
+                        auto_download_remote_file(root, pom_file_name, '-sources.jar.sha1')
+                        auto_download_remote_file(root, pom_file_name, '-javadoc.jar')
+                        auto_download_remote_file(root, pom_file_name, '-javadoc.jar.sha1')
             except Exception as e:
                 print(f"Failed to download source jars {pom_file_name}: {e}")
     print("Starting auto download source jars end...")
 
 # 自动下载指定文件
-def auto_download_sources(root, pom_file_name, group_id, artifact_id, version, type):
-    # 不存在jar文件，则下载
-    jar_file = utils.replace_last_occurrence(pom_file_name, '.pom', type)
-    if not os.path.exists(os.path.join(root, jar_file)):
-        remote_path = utils.get_remote_path(group_id, artifact_id, version, type)
-        utils.fetch_from_remote(remote_path)
+def auto_download_remote_file(root, pom_file_name, file_type):
+    pom_file_path = os.path.join(root, pom_file_name)
+    try:
+        if pom_file_path.lower().endswith('.pom'):
+            group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
+            # 文件不存在，从远程下载
+            if packaging == 'jar':
+                jar_file = utils.replace_last_occurrence(pom_file_name, '.pom', file_type)
+                # 不存在jar文件，则下载
+                if not os.path.exists(os.path.join(root, jar_file)):
+                    remote_path = utils.get_remote_path(group_id, artifact_id, version, file_type)
+                    utils.fetch_from_remote(remote_path)
+    except Exception as e:
+        print(f"Failed to download source jars {pom_file_name}: {e}")
+
+
 
 
 # 定时清理空文件夹

@@ -15,7 +15,7 @@ from flask_httpauth import HTTPBasicAuth
 from maven_proxy import help
 from maven_proxy import utils
 from maven_proxy.config import app_config as config
-from maven_proxy.job import cleanup_empty_folders, auto_download_sources_by_dirs
+from maven_proxy.job import cleanup_empty_folders, auto_download_remote_files_by_dirs
 auth = HTTPBasicAuth()
 # 创建全局配置对象
 app = config.app
@@ -193,7 +193,7 @@ def startup():
     print("Jobs starting...")
     scheduler = BackgroundScheduler()
     scheduler.add_job(cleanup_empty_folders, 'interval', seconds=app.config['CLEANUP_INTERVAL'])
-    scheduler.add_job(auto_download_sources_by_dirs, 'interval', seconds=app.config['AUTO_DOWNLOAD_INTERVAL'])
+    scheduler.add_job(auto_download_remote_files_by_dirs, 'interval', seconds=app.config['AUTO_DOWNLOAD_INTERVAL'])
     scheduler.start()
     print("Jobs started")
     app.run(host='0.0.0.0', port=config.PORT, threaded=True)

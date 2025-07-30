@@ -55,7 +55,6 @@ def replace_last_occurrence(str_value, old, new):
         return str_value  # 未找到则返回原字符串
     return new.join(parts)
 
-
 # 获取本地路径
 def get_local_path(path):
     return os.path.join(app.config['REPO_ROOT'], path)
