@@ -199,6 +199,8 @@ def handle_metadata(path):
     return send_from_directory(
         os.path.dirname(local_path),
         os.path.basename(local_path))
+
+
 # 初始化定时任务
 def start_job():
     print("Jobs starting...")
