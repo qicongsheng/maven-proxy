@@ -199,6 +199,16 @@ def handle_metadata(path):
     return send_from_directory(
         os.path.dirname(local_path),
         os.path.basename(local_path))
+# 初始化定时任务
+def start_job():
+    print("Jobs starting...")
+    scheduler1 = BackgroundScheduler()
+    scheduler1.add_job(cleanup_empty_folders, 'interval', seconds=app.config['CLEANUP_INTERVAL'])
+    scheduler1.start()
+    scheduler2 = BackgroundScheduler()
+    scheduler2.add_job(auto_download_remote_files_by_dirs, 'interval', seconds=app.config['AUTO_DOWNLOAD_INTERVAL'])
+    scheduler2.start()
+    print("Jobs started")
 
 
 def startup():
@@ -207,13 +217,7 @@ def startup():
     print(f"browse_context_path={app.config['BROWSE_CONTEXT_PATH']}")
     print(f"local_repo_dir={config.REPO_ROOT}")
     print(f"remote_repo={config.REMOTE_REPO}")
-    # 初始化定时任务
-    print("Jobs starting...")
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(cleanup_empty_folders, 'interval', seconds=app.config['CLEANUP_INTERVAL'])
-    scheduler.add_job(auto_download_remote_files_by_dirs, 'interval', seconds=app.config['AUTO_DOWNLOAD_INTERVAL'])
-    scheduler.start()
-    print("Jobs started")
+    start_job()
     app.run(host='0.0.0.0', port=config.PORT, threaded=True)
 
 
