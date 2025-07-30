@@ -12,7 +12,7 @@ from flask_httpauth import HTTPBasicAuth
 from maven_proxy import help
 from maven_proxy import utils
 from maven_proxy.config import app_config as config
-from maven_proxy.job import cleanup_empty_folders, auto_download_remote_files_by_dirs
+from maven_proxy import job
 
 auth = HTTPBasicAuth()
 # 创建全局配置对象
@@ -200,26 +200,14 @@ def handle_metadata(path):
         os.path.dirname(local_path),
         os.path.basename(local_path))
 
-
-# 初始化定时任务
-def start_job():
-    print("Jobs starting...")
-    scheduler1 = BackgroundScheduler()
-    scheduler1.add_job(cleanup_empty_folders, 'interval', seconds=app.config['CLEANUP_INTERVAL'])
-    scheduler1.start()
-    scheduler2 = BackgroundScheduler()
-    scheduler2.add_job(auto_download_remote_files_by_dirs, 'interval', seconds=app.config['AUTO_DOWNLOAD_INTERVAL'])
-    scheduler2.start()
-    print("Jobs started")
-
-
 def startup():
     print(f"Maven Proxy {help.get_version()}")
     print(f"repo_context_path={app.config['REPO_CONTEXT_PATH']}")
     print(f"browse_context_path={app.config['BROWSE_CONTEXT_PATH']}")
     print(f"local_repo_dir={config.REPO_ROOT}")
     print(f"remote_repo={config.REMOTE_REPO}")
-    start_job()
+    # 初始化定时任务
+    job.start()
     app.run(host='0.0.0.0', port=config.PORT, threaded=True)
 
 
