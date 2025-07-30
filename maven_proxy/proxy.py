@@ -176,7 +176,7 @@ def login():
             session.permanent = True  # 启用超时设置
             return redirect('/browse')
         return "无效的凭据", 401
-    return render_template("login.html")
+    return render_template("login.html", version=help.get_version())
 
 
 # 处理根路径请求
