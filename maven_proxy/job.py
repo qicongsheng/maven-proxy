@@ -21,6 +21,7 @@ def auto_download_remote_files_by_dirs():
                 group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
                 # 文件不存在，从远程下载
                 if packaging == 'jar':
+                    auto_download_remote_file(root, pom_file_name, '.pom.sha1')
                     auto_download_remote_file(root, pom_file_name, '.jar')
                     auto_download_remote_file(root, pom_file_name, '.jar.sha1')
                     auto_download_remote_file(root, pom_file_name, '-sources.jar')
