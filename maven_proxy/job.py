@@ -2,12 +2,15 @@
 # -*- coding:utf-8 -*-
 # Author: qicongsheng
 import os
-from maven_proxy import utils
-from maven_proxy.config import app_config as config
 import threading
 import time
 import traceback
+
+from maven_proxy import utils
+from maven_proxy.config import app_config as config
+
 app = config.app
+
 
 # 定时随机补全sources.jar/javadoc.jar
 def auto_download_remote_files_by_dirs():
@@ -33,7 +36,6 @@ def auto_download_remote_files_by_dirs():
         except:
             traceback.print_exc()
         time.sleep(app.config['AUTO_DOWNLOAD_INTERVAL'])
-
 
 
 # 自动下载指定文件
@@ -84,7 +86,6 @@ def cleanup_empty_folders():
         except:
             traceback.print_exc()
         time.sleep(app.config['CLEANUP_INTERVAL'])
-
 
 
 def start():

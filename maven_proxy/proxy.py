@@ -4,15 +4,14 @@
 import os
 import uuid
 
-from apscheduler.schedulers.background import BackgroundScheduler
 from flask import request, send_from_directory, abort, Response, \
     render_template, redirect, session
 from flask_httpauth import HTTPBasicAuth
 
 from maven_proxy import help
+from maven_proxy import job
 from maven_proxy import utils
 from maven_proxy.config import app_config as config
-from maven_proxy import job
 
 auth = HTTPBasicAuth()
 # 创建全局配置对象
@@ -199,6 +198,7 @@ def handle_metadata(path):
     return send_from_directory(
         os.path.dirname(local_path),
         os.path.basename(local_path))
+
 
 def startup():
     print(f"Maven Proxy {help.get_version()}")
