@@ -14,13 +14,12 @@ setup(
     url="https://github.com/qicongsheng/maven-proxy",
     packages=find_packages(),
     package_data={
-        "maven_proxy": ["templates/*.html"]
+        "maven_proxy": ["templates/*", "static/*"]
     },
     install_requires=[
         "flask",
         "requests",
-        "flask_httpauth",
-        "apscheduler"
+        "flask_httpauth"
     ],
     entry_points={
         "console_scripts": [

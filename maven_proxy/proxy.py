@@ -63,12 +63,12 @@ def login():
     return render_template("login.html", version=help.get_version())
 
 
-@app.route('/robots.txt')
+@app.route('/robots.txt', methods=['GET'])
 def robots():
     return send_from_directory(app.static_folder, 'robots.txt')
 
 
-@app.route('/favicon.ico')
+@app.route('/favicon.ico', methods=['GET'])
 def favicon():
     return send_from_directory(app.static_folder, 'favicon.ico')
 
