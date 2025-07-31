@@ -62,13 +62,15 @@ def login():
         return "无效的凭据", 401
     return render_template("login.html", version=help.get_version())
 
+
 @app.route('/robots.txt')
 def robots():
-    return send_from_directory(app.static_folder,'robots.txt')
+    return send_from_directory(app.static_folder, 'robots.txt')
+
 
 @app.route('/favicon.ico')
 def favicon():
-    return send_from_directory(app.static_folder,'favicon.ico')
+    return send_from_directory(app.static_folder, 'favicon.ico')
 
 
 # 处理browse路径请求
