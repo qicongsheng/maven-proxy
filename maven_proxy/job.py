@@ -26,12 +26,16 @@ def auto_download_remote_files_by_dirs():
                         # 文件不存在，从远程下载
                         if packaging == 'jar':
                             auto_download_remote_file(root, pom_file_name, '.pom.sha1')
+                            auto_download_remote_file(root, pom_file_name, '.pom.md5')
                             auto_download_remote_file(root, pom_file_name, '.jar')
                             auto_download_remote_file(root, pom_file_name, '.jar.sha1')
+                            auto_download_remote_file(root, pom_file_name, '.jar.md5')
                             auto_download_remote_file(root, pom_file_name, '-sources.jar')
                             auto_download_remote_file(root, pom_file_name, '-sources.jar.sha1')
+                            auto_download_remote_file(root, pom_file_name, '-sources.jar.md5')
                             auto_download_remote_file(root, pom_file_name, '-javadoc.jar')
                             auto_download_remote_file(root, pom_file_name, '-javadoc.jar.sha1')
+                            auto_download_remote_file(root, pom_file_name, '-javadoc.jar.md5')
                     except:
                         traceback.print_exc()
         print("Auto download remote files end.")
