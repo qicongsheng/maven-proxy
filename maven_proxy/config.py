@@ -30,6 +30,7 @@ class Config:
                             default=int(os.getenv("AUTO_DOWNLOAD_INTERVAL", 60 * 60 * 24 * 3)))
         parser.add_argument("--permanent-session-lifetime", type=int,
                             default=int(os.getenv("PERMANENT_SESSION_LIFETIME", 60 * 24)))
+        parser.add_argument("--msg-404", type=str, default=os.getenv("MSG_404", "Not Found"))
         args = parser.parse_args()
 
         # 本地仓库端口
@@ -52,6 +53,7 @@ class Config:
         self.CLEANUP_AGE = args.cleanup_age
         self.AUTO_DOWNLOAD_INTERVAL = args.auto_download_interval
         self.PERMANENT_SESSION_LIFETIME = args.permanent_session_lifetime
+        self.MSG_404 = args.msg_404
 
         app = Flask(__name__)
         app.config.from_object(self)

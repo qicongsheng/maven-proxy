@@ -37,6 +37,11 @@ def auth_error(status):
     return "Authentication failed", status, {'X-Custom': 'Header', 'Content-Type': 'text/plain'}
 
 
+@app.errorhandler(404)
+def show_404_page(e):
+    return app.config['MSG_404'], 404
+
+
 # 处理域名路径请求
 @app.route(f'/', methods=['GET'])
 def handle_domain():
