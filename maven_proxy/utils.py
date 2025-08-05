@@ -105,7 +105,7 @@ def parse_pom_xml(xml_file):
         # 检查是否是有效的POM文件
         if root.tag not in ['{http://maven.apache.org/POM/4.0.0}project', 'project']:
             print(f"跳过非POM文件: {xml_file} (根元素: {root.tag})")
-            return None
+            return None, None, None, None
 
         # 提取当前项目信息
         group_id = None
