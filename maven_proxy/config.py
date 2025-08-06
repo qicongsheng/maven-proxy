@@ -33,6 +33,8 @@ class Config:
         parser.add_argument("--permanent-session-lifetime", type=int,
                             default=int(os.getenv("PERMANENT_SESSION_LIFETIME", 60 * 24)))
         parser.add_argument("--msg-404", type=str, default=os.getenv("MSG_404", "Not Found"))
+        parser.add_argument("--database-file-path", type=str,
+                            default=os.getenv("DATABASE_FILE_PATH", "~/.maven_proxy/database.db"))
         args = parser.parse_args()
 
         # 本地仓库端口
@@ -56,9 +58,10 @@ class Config:
         self.AUTO_DOWNLOAD_INTERVAL = args.auto_download_interval
         self.PERMANENT_SESSION_LIFETIME = args.permanent_session_lifetime
         self.MSG_404 = args.msg_404
+        self.DATABASE_FILE_PATH = args.database_file_path
 
         app = Flask(__name__)
-        app.db = db.DB()
+        app.db = db.DB(database_file_path=self.DATABASE_FILE_PATH)
         app.config.from_object(self)
         app.url_map.strict_slashes = False
         app.secret_key = str(uuid.uuid4())
