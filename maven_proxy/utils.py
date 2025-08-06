@@ -93,7 +93,7 @@ def fetch_from_remote(path):
                 f.write(resp.content)
             print(f'fetched from remote: {remote_url}')
             return True
-        else:
+        if resp.status_code == 404:
             # 记录HTTP错误到数据库
             error_msg = f"HTTP {resp.status_code}: {resp.reason}"
             app.db.record_fetch_error(remote_url, error_msg)
