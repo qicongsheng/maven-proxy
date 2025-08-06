@@ -76,7 +76,7 @@ def build_remote_path(group_id, artifact_id, version, type):
 def fetch_from_remote(path):
     remote_url = app.config['REMOTE_REPO'] + path
     # 检查之前是否抓取失败过，如果失败过则跳过抓取
-    if app.db.has_fetch_failed_before(path):
+    if app.db.has_fetch_failed_before('/' + path):
         print(f'Skipping fetch from remote (failed before): {path}')
         return False
 
