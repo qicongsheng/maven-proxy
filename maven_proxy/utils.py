@@ -76,8 +76,8 @@ def build_remote_path(group_id, artifact_id, version, type):
 def fetch_from_remote(path):
     remote_url = app.config['REMOTE_REPO'] + path
     # 检查之前是否抓取失败过，如果失败过则跳过抓取
-    if app.db.has_fetch_failed_before(remote_url):
-        print(f'Skipping fetch from remote (failed before): {remote_url}')
+    if app.db.has_fetch_failed_before(path):
+        print(f'Skipping fetch from remote (failed before): {path}')
         return False
 
     print(f'fetching from remote: {remote_url}')
@@ -96,7 +96,7 @@ def fetch_from_remote(path):
         if resp.status_code == 404:
             # 记录HTTP错误到数据库
             error_msg = f"HTTP {resp.status_code}: {resp.reason}"
-            app.db.record_fetch_error(remote_url, error_msg)
+            app.db.record_fetch_error(path, error_msg)
             print(f'fetch failed from remote: {remote_url}, {error_msg}')
             return False
     except Exception as e:

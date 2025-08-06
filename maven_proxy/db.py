@@ -18,9 +18,9 @@ class DB:
             'CREATE TABLE IF NOT EXISTS fetch_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, remote_url TEXT NOT NULL, error_message TEXT, timestamp INTEGER NOT NULL)')
         self.conn.commit()
 
-    def record_fetch_error(self, remote_url, error_message):
+    def record_fetch_error(self, file_path, error_message):
         self.conn.execute('INSERT INTO fetch_errors (remote_url, error_message, timestamp)VALUES (?, ?, ?)',
-                          (remote_url, error_message, int(time.time())))
+                          (file_path, error_message, int(time.time())))
         self.conn.commit()
 
     def has_fetch_failed_before(self, remote_url):
