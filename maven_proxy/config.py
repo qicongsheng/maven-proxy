@@ -29,7 +29,7 @@ class Config:
         parser.add_argument("--cleanup-interval", type=int, default=int(os.getenv("CLEANUP_INTERVAL", 300)))
         parser.add_argument("--cleanup-age", type=int, default=int(os.getenv("CLEANUP_AGE", 3600)))
         parser.add_argument("--auto-download-interval", type=int,
-                            default=int(os.getenv("AUTO_DOWNLOAD_INTERVAL", 60 * 60 * 24 * 3)))
+                            default=int(os.getenv("AUTO_DOWNLOAD_INTERVAL", 60 * 60 * 8)))
         parser.add_argument("--permanent-session-lifetime", type=int,
                             default=int(os.getenv("PERMANENT_SESSION_LIFETIME", 60 * 24)))
         parser.add_argument("--msg-404", type=str, default=os.getenv("MSG_404", "Not Found"))
