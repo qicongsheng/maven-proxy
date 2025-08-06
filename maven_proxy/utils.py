@@ -100,9 +100,6 @@ def fetch_from_remote(path):
             print(f'fetch failed from remote: {remote_url}, {error_msg}')
             return False
     except Exception as e:
-        # 记录异常错误到数据库
-        error_msg = str(e)
-        app.db.record_fetch_error(remote_url, error_msg)
         print(f"Remote fetch failed: {e}")
         return False
 
