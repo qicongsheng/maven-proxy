@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 # Author: qicongsheng
 import argparse
+import logging
 import os
 import uuid
 from datetime import timedelta
@@ -60,6 +61,7 @@ class Config:
 
         app = Flask(__name__)
         app.db = db.DB(database_file_path=self.DATABASE_FILE_PATH)
+        app.logger.setLevel(logging.INFO)
         app.config.from_object(self)
         app.url_map.strict_slashes = False
         app.secret_key = str(uuid.uuid4())
