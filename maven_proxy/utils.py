@@ -5,10 +5,11 @@ import hashlib
 import os
 from datetime import datetime
 from xml.etree import ElementTree as ET
-from maven_proxy.db import db
+
 import requests
 
 from maven_proxy.config import app_config as config
+from maven_proxy.db import db
 
 app = config.app
 
@@ -105,6 +106,7 @@ def fetch_from_remote(path):
         db.record_fetch_error(remote_url, error_msg)
         print(f"Remote fetch failed: {e}")
         return False
+
 
 # 尝试将XML文件解析为POM并提取坐标信息
 def parse_pom_xml(xml_file):
