@@ -15,7 +15,7 @@ app = config.app
 # 定时随机补全sources.jar/javadoc.jar
 def auto_download_remote_files_by_dirs():
     while True:
-        print("Starting auto download remote files...")
+        app.logger.info("Starting auto download remote files...")
         # 遍历 REPO_ROOT 目录
         for root, dirs, files in os.walk(app.config['REPO_ROOT'], topdown=False):
             for pom_file_name in files:
@@ -38,7 +38,7 @@ def auto_download_remote_files_by_dirs():
                             auto_download_remote_file(root, pom_file_name, '-javadoc.jar.md5')
                     except:
                         traceback.print_exc()
-        print("Auto download remote files end.")
+        app.logger.info("Auto download remote files end.")
         time.sleep(app.config['AUTO_DOWNLOAD_INTERVAL'])
 
 
@@ -56,14 +56,14 @@ def auto_download_remote_file(root, pom_file_name, file_type):
             remote_path = utils.build_remote_path(group_id, artifact_id, version, file_type)
             utils.fetch_from_remote(remote_path)
     except Exception as e:
-        print(f"Failed to auto download remote file {pom_file_name}: {e}")
+        app.logger.error(f"Failed to auto download remote file {pom_file_name}: {e}")
 
 
 # 定时清理空文件夹
 def cleanup_empty_folders():
     while True:
         try:
-            print("Starting cleanup of empty folders...")
+            app.logger.info("Starting cleanup of empty folders...")
             cutoff_time = time.time() - app.config['CLEANUP_AGE']
             deleted_folders = []
             # 遍历 REPO_ROOT 目录
@@ -78,14 +78,14 @@ def cleanup_empty_folders():
                             if dir_mtime < cutoff_time:
                                 os.rmdir(dir_path)
                                 deleted_folders.append(dir_path)
-                                print(f"Deleted empty folder: {dir_path}")
+                                app.logger.info(f"Deleted empty folder: {dir_path}")
                     except Exception as e:
-                        print(f"Failed to delete {dir_path}: {e}")
+                        app.logger.error(f"Failed to delete {dir_path}: {e}")
             # 如果删除了文件夹，记录日志
             if deleted_folders:
-                print(f"Deleted {len(deleted_folders)} empty folders.")
+                app.logger.info(f"Deleted {len(deleted_folders)} empty folders.")
             else:
-                print("No empty folders to delete.")
+                app.logger.info("No empty folders to delete.")
         except:
             traceback.print_exc()
         time.sleep(app.config['CLEANUP_INTERVAL'])

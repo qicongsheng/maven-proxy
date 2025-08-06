@@ -77,10 +77,10 @@ def fetch_from_remote(path):
     remote_url = app.config['REMOTE_REPO'] + path
     # 检查之前是否抓取失败过，如果失败过则跳过抓取
     if app.db.has_fetch_failed_before('/' + path):
-        print(f'Skipping fetch from remote (failed before): {path}')
+        app.logger.info(f'Skipping fetch from remote (failed before): {path}')
         return False
 
-    print(f'fetching from remote: {remote_url}')
+    app.logger.info(f'fetching from remote: {remote_url}')
     try:
         auth = None
         if app.config['REMOTE_REPO_USERNAME'] and app.config['REMOTE_REPO_PASSWORD']:
@@ -91,16 +91,16 @@ def fetch_from_remote(path):
             os.makedirs(os.path.dirname(local_path), exist_ok=True)
             with open(local_path, 'wb') as f:
                 f.write(resp.content)
-            print(f'fetched from remote: {remote_url}')
+            app.logger.info(f'fetched from remote: {remote_url}')
             return True
         if resp.status_code == 404:
             # 记录HTTP错误到数据库
             error_msg = f"HTTP {resp.status_code}: {resp.reason}"
             app.db.record_fetch_error('/' + path, error_msg)
-            print(f'fetch failed from remote: {remote_url}, {error_msg}')
+            app.logger.error(f'fetch failed from remote: {remote_url}, {error_msg}')
             return False
     except Exception as e:
-        print(f"Remote fetch failed: {e}")
+        app.logger.error(f"Remote fetch failed: {e}")
         return False
 
 
@@ -113,7 +113,7 @@ def parse_pom_xml(xml_file):
 
         # 检查是否是有效的POM文件
         if root.tag not in ['{http://maven.apache.org/POM/4.0.0}project', 'project']:
-            print(f"跳过非POM文件: {xml_file} (根元素: {root.tag})")
+            app.logger.error(f"跳过非POM文件: {xml_file} (根元素: {root.tag})")
             return None, None, None, None
 
         # 提取当前项目信息
@@ -186,8 +186,8 @@ def parse_pom_xml(xml_file):
 
         return group_id, artifact_id, version, packaging
     except ET.ParseError:
-        print(f"XML解析错误: {xml_file} - 可能不是有效的XML文件")
+        app.logger.error(f"XML解析错误: {xml_file} - 可能不是有效的XML文件")
         return None, None, None, None
     except Exception as e:
-        print(f"解析 {xml_file} 时出错: {str(e)}")
+        app.logger.error(f"解析 {xml_file} 时出错: {str(e)}")
         return None, None, None, None
