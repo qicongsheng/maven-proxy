@@ -2,4 +2,4 @@
 # -*- coding:utf-8 -*-
 # Author: qicongsheng
 def get_version():
-    return '1.0.92.33'
+    return '1.1.1'

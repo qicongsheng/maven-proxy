@@ -14,6 +14,7 @@ app = config.app
 
 # 定时随机补全sources.jar/javadoc.jar
 def auto_download_remote_files_by_dirs():
+    time.sleep(5)
     while True:
         app.logger.info("Starting auto download remote files...")
         # 遍历 REPO_ROOT 目录
@@ -61,6 +62,7 @@ def auto_download_remote_file(root, pom_file_name, file_type):
 
 # 定时清理空文件夹
 def cleanup_empty_folders():
+    time.sleep(5)
     while True:
         try:
             app.logger.info("Starting cleanup of empty folders...")
