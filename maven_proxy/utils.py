@@ -5,7 +5,7 @@ import hashlib
 import os
 from datetime import datetime
 from xml.etree import ElementTree as ET
-
+from maven_proxy.db import db
 import requests
 
 from maven_proxy.config import app_config as config
@@ -88,12 +88,18 @@ def fetch_from_remote(path):
                 f.write(resp.content)
             print(f'fetched from remote: {remote_url}')
             return True
-        print(f'fetch failed from remote: {remote_url}')
-        return False
+        else:
+            # 记录HTTP错误到数据库
+            error_msg = f"HTTP {resp.status_code}: {resp.reason}"
+            db.record_fetch_error(remote_url, error_msg)
+            print(f'fetch failed from remote: {remote_url}, {error_msg}')
+            return False
     except Exception as e:
+        # 记录异常错误到数据库
+        error_msg = str(e)
+        db.record_fetch_error(remote_url, error_msg)
         print(f"Remote fetch failed: {e}")
         return False
-
 
 # 尝试将XML文件解析为POM并提取坐标信息
 def parse_pom_xml(xml_file):
