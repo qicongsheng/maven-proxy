@@ -37,4 +37,3 @@ class DB:
         count = cursor.fetchone()[0]
         return count > 0
 
-db = DB()

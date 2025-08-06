@@ -8,6 +8,8 @@ from datetime import timedelta
 
 from flask import Flask
 
+from maven_proxy import db
+
 
 class Config:
     def __init__(self):
@@ -56,6 +58,7 @@ class Config:
         self.MSG_404 = args.msg_404
 
         app = Flask(__name__)
+        app.db = db.DB()
         app.config.from_object(self)
         app.url_map.strict_slashes = False
         app.secret_key = str(uuid.uuid4())

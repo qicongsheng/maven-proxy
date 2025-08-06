@@ -9,7 +9,6 @@ from xml.etree import ElementTree as ET
 import requests
 
 from maven_proxy.config import app_config as config
-from maven_proxy.db import db
 
 app = config.app
 
@@ -77,7 +76,7 @@ def build_remote_path(group_id, artifact_id, version, type):
 def fetch_from_remote(path):
     remote_url = app.config['REMOTE_REPO'] + path
     # 检查之前是否抓取失败过，如果失败过则跳过抓取
-    if db.has_fetch_failed_before(remote_url):
+    if app.db.has_fetch_failed_before(remote_url):
         print(f'Skipping fetch from remote (failed before): {remote_url}')
         return False
 
@@ -97,13 +96,13 @@ def fetch_from_remote(path):
         else:
             # 记录HTTP错误到数据库
             error_msg = f"HTTP {resp.status_code}: {resp.reason}"
-            db.record_fetch_error(remote_url, error_msg)
+            app.db.record_fetch_error(remote_url, error_msg)
             print(f'fetch failed from remote: {remote_url}, {error_msg}')
             return False
     except Exception as e:
         # 记录异常错误到数据库
         error_msg = str(e)
-        db.record_fetch_error(remote_url, error_msg)
+        app.db.record_fetch_error(remote_url, error_msg)
         print(f"Remote fetch failed: {e}")
         return False
 
