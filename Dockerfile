@@ -9,7 +9,7 @@ ENV PORT=8081 \
     REMOTE_REPO_PASSWORD= \
     REPO_CONTEXT_PATH=/maven2 \
     BROWSE_CONTEXT_PATH=/browse \
-    LOCAL_REPO_DIR=/data/repository \
+    LOCAL_REPO_DIR=/data \
     TZ=Asia/Shanghai
 
 RUN pip install --no-cache-dir maven-proxy -U && mkdir -p /data/repository
