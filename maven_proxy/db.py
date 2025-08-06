@@ -7,7 +7,7 @@ import time
 
 class DB:
     def __init__(self, data_file_path='./data.db'):
-        self.conn = sqlite3.connect(data_file_path)
+        self.conn = sqlite3.connect(data_file_path, check_same_thread=False)
         self.init_tables()
 
     def init_tables(self):
