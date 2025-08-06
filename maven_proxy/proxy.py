@@ -143,7 +143,7 @@ def handle_put(path):
 def generate_directory_listing(path):
     local_path = utils.get_local_path(path)
     if not os.path.exists(local_path):
-        return None
+        abort(404)
 
     # 获取目录下的文件和子目录
     items = os.listdir(local_path)
