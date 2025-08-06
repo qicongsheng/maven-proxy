@@ -15,7 +15,7 @@ class DB:
     def init_tables(self):
         # 创建错误记录表
         self.conn.execute(
-            'CREATE TABLE IF NOT EXISTS fetch_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, remote_url TEXT NOT NULL, error_message TEXT, imestamp INTEGER NOT NULL)')
+            'CREATE TABLE IF NOT EXISTS fetch_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, remote_url TEXT NOT NULL, error_message TEXT, timestamp INTEGER NOT NULL)')
         self.conn.commit()
 
     def record_fetch_error(self, remote_url, error_message):
