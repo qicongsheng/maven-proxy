@@ -6,6 +6,7 @@ import sqlite3
 import time
 from datetime import datetime
 
+
 class DB:
     def __init__(self, database_file_path='./database.db'):
         self.conn = sqlite3.connect(database_file_path, check_same_thread=False)
@@ -36,11 +37,8 @@ class DB:
         :param limit: 限制返回记录数，默认100条
         :return: 格式化后的错误记录列表
         """
-        cursor = self.conn.execute('''
-                                   SELECT id, remote_url, error_message, timestamp
-                                   FROM fetch_errors
-                                   ORDER BY id DESC LIMIT ?
-                                   ''', (limit,))
+        cursor = self.conn.execute(
+            'SELECT id, remote_url, error_message, timestamp FROM fetch_errors ORDER BY id DESC LIMIT ?', (limit,))
         result = []
         for row in cursor.fetchall():
             # 将时间戳转换为 yyyy-MM-dd HH:mm:ss 格式

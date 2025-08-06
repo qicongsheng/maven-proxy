@@ -77,6 +77,7 @@ def robots():
 def favicon():
     return send_from_directory(app.static_folder, 'favicon.ico')
 
+
 @app.route('/api/fetch_errors/query', methods=['GET', 'POST'])
 @auth.login_required
 def get_fetch_errors():
@@ -126,6 +127,7 @@ def clear_fetch_errors():
             'success': False,
             'error': str(e)
         }), 500
+
 
 # 处理browse路径请求
 @app.route(f'{browse_context_path}/<path:path>', methods=['GET'])
