@@ -5,7 +5,7 @@ import os
 import uuid
 
 from flask import request, send_from_directory, abort, Response, \
-    render_template, redirect, session, jsonify
+    render_template, redirect, session, jsonify, make_response
 from flask_httpauth import HTTPBasicAuth
 
 from maven_proxy import help
@@ -68,16 +68,20 @@ def login():
     return render_template("login.html", version=help.get_version())
 
 
-@app.route('/favicon.ico', methods=['GET'])
 @app.route('/robots.txt', methods=['GET'])
-def root():
-    return send_from_directory(app.static_folder, 'robots.txt')
+def robots():
+    return utils.set_resp_cache(make_response(send_from_directory(app.static_folder, 'robots.ico')))
+
+
+@app.route('/favicon.ico', methods=['GET'])
+def favicon():
+    return utils.set_resp_cache(make_response(send_from_directory(app.static_folder, 'favicon.ico')))
 
 
 @app.route('/webfonts/<path:path>', methods=['GET'])
 @app.route('/css/<path:path>', methods=['GET'])
 def css(path):
-    return send_from_directory(app.static_folder + "/css", path)
+    return utils.set_resp_cache(make_response(send_from_directory(app.static_folder + "/css", path)))
 
 
 @app.route('/api/fetch_errors/query', methods=['GET', 'POST'])

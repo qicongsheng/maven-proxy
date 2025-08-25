@@ -67,6 +67,14 @@ def get_local_path(path):
     return os.path.join(app.config['REPO_ROOT'], path)
 
 
+# 设置请求header缓存时长
+def set_resp_cache(resp):
+    resp.headers['Cache-Control'] = 'public, max-age=31536000'
+    resp.headers['Expires'] = (datetime.datetime.now() + datetime.timedelta(seconds=31536000)).strftime(
+        '%a, %d %b %Y %H:%M:%S GMT')
+    return resp
+
+
 # 根据坐标拼接相对路径目录
 def build_remote_path(group_id, artifact_id, version, type):
     return group_id.replace('.', '/') + '/' + artifact_id + '/' + version + '/' + artifact_id + '-' + version + type
