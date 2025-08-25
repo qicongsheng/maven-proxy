@@ -14,7 +14,7 @@ setup(
     url="https://github.com/qicongsheng/maven-proxy",
     packages=find_packages(),
     package_data={
-        "maven_proxy": ["templates/*", "static/*"]
+        "maven_proxy": ["templates/*", "static/*", "static/*/*"]
     },
     install_requires=[
         "flask",
