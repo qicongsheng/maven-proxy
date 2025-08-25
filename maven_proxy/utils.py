@@ -3,7 +3,7 @@
 # Author: qicongsheng
 import hashlib
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from xml.etree import ElementTree as ET
 
 import requests
@@ -70,7 +70,7 @@ def get_local_path(path):
 # 设置请求header缓存时长
 def set_resp_cache(resp):
     resp.headers['Cache-Control'] = 'public, max-age=31536000'
-    resp.headers['Expires'] = (datetime.datetime.now() + datetime.timedelta(seconds=31536000)).strftime(
+    resp.headers['Expires'] = (datetime.now() + timedelta(seconds=31536000)).strftime(
         '%a, %d %b %Y %H:%M:%S GMT')
     return resp
 
