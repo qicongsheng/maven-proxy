@@ -68,14 +68,16 @@ def login():
     return render_template("login.html", version=help.get_version())
 
 
+@app.route('/favicon.ico', methods=['GET'])
 @app.route('/robots.txt', methods=['GET'])
-def robots():
+def root():
     return send_from_directory(app.static_folder, 'robots.txt')
 
 
-@app.route('/favicon.ico', methods=['GET'])
-def favicon():
-    return send_from_directory(app.static_folder, 'favicon.ico')
+@app.route('/webfonts/<path:path>', methods=['GET'])
+@app.route('/css/<path:path>', methods=['GET'])
+def css(path):
+    return send_from_directory(app.static_folder + "/css", path)
 
 
 @app.route('/api/fetch_errors/query', methods=['GET', 'POST'])
