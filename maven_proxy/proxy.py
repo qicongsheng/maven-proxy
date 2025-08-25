@@ -75,8 +75,7 @@ def root():
 
 
 @app.route('/webfonts/<path:path>', methods=['GET'])
-@app.route('/css/<path:path>', methods=['GET'])
-def css(path):
+def webfonts(path):
     return send_from_directory(app.static_folder + "/css", path)
 
 
