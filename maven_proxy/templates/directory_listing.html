@@ -87,7 +87,7 @@
         {% for dir in dirs %}
         <tr>
             <td>
-                <a href="{{ browse_context_path + '/' + path.rstrip('/') + '/' + dir if path != '' else browse_context_path + '/' + dir }}"><i class="fas fa-folder-open folder-icon"></i> {{ dir }}</a></td>
+                <a href="{{ browse_context_path + '/' + path.rstrip('/') + '/' + dir if path != '' else browse_context_path + '/' + dir }}"><i class="fas fa-folder-open folder-icon"></i> /{{ dir }}</a></td>
             <td>{{ get_last_modified(os.path.join(local_path, dir)) }}</td>
             <td>-</td>
         </tr>
