@@ -27,7 +27,7 @@ def auto_download_remote_files_by_dirs():
                         auto_download_remote_file(root, pom_file_name, '.pom.sha1')
                         auto_download_remote_file(root, pom_file_name, '.pom.md5')
                         # 文件不存在，从远程下载
-                        if packaging == 'jar':
+                        if packaging == 'jar' or packaging == 'bundle':
                             auto_download_remote_file(root, pom_file_name, '.jar')
                             auto_download_remote_file(root, pom_file_name, '.jar.sha1')
                             auto_download_remote_file(root, pom_file_name, '.jar.md5')
