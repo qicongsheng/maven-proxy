@@ -1,4 +1,4 @@
-FROM python:3.9.21-alpine3.20
+FROM registry.mozu.eu.org/qics/python:3.9.21-alpine3.20
 MAINTAINER qicongsheng
 
 ENV PORT=8081 \
@@ -10,6 +10,7 @@ ENV PORT=8081 \
     REPO_CONTEXT_PATH=/maven2 \
     BROWSE_CONTEXT_PATH=/browse \
     LOCAL_REPO_DIR=/data \
+    SKIPLOG_ENABLE=false \
     TZ=Asia/Shanghai
 
 RUN pip install --no-cache-dir maven-proxy -U && mkdir -p /data/repository
