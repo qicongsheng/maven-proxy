@@ -27,7 +27,7 @@ class Config:
         parser.add_argument("--auth-password", type=str, default=os.getenv("AUTH_PASSWORD", "passwd"))
         parser.add_argument("--repo-context-path", type=str, default=os.getenv("REPO_CONTEXT_PATH", "/maven2"))
         parser.add_argument("--browse-context-path", type=str, default=os.getenv("BROWSE_CONTEXT_PATH", "/browse"))
-        parser.add_argument("--cleanup-interval", type=int, default=int(os.getenv("CLEANUP_INTERVAL", 300)))
+        parser.add_argument("--cleanup-interval", type=int, default=int(os.getenv("CLEANUP_INTERVAL", 60 * 15)))
         parser.add_argument("--cleanup-age", type=int, default=int(os.getenv("CLEANUP_AGE", 3600)))
         parser.add_argument("--auto-download-interval", type=int,
                             default=int(os.getenv("AUTO_DOWNLOAD_INTERVAL", 60 * 60 * 8)))
