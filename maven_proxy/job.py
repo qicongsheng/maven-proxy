@@ -73,7 +73,7 @@ def cleanup_empty_folders():
                     dir_path = os.path.join(root, dir_name)
                     try:
                         # 检查是否为空文件夹
-                        if not os.listdir(dir_path):
+                        if len(os.listdir(dir_path)) == 0:
                             dir_mtime = os.path.getmtime(dir_path)
                             # 检查是否超过清理时间
                             if dir_mtime < cutoff_time:
