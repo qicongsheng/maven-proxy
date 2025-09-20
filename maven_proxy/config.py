@@ -61,7 +61,7 @@ class Config:
         self.DATABASE_FILE_PATH = args.local_repo_dir + '/database.db'
         self.SKIPLOG_ENABLE = True if 'true' == args.skiplog_enable else False
 
-        app = Flask('MavenProxy')
+        app = Flask(__name__)
         app.db = db.DB(database_file_path=self.DATABASE_FILE_PATH)
         app.logger.setLevel(logging.INFO)
         app.config.from_object(self)
