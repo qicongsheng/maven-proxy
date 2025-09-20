@@ -274,7 +274,7 @@ def handle_metadata(path):
 
 
 def startup():
-    print(f"Maven Proxy {help.get_version()}")
+    print(f"======== Maven Proxy {help.get_version()} ========")
     print(f"repo_context_path={app.config['REPO_CONTEXT_PATH']}")
     print(f"browse_context_path={app.config['BROWSE_CONTEXT_PATH']}")
     print(f"local_repo_dir={config.REPO_ROOT}")
