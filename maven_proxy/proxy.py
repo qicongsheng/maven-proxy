@@ -70,7 +70,7 @@ def login():
 
 @app.route('/robots.txt', methods=['GET'])
 def robots():
-    return utils.set_resp_cache(make_response(send_from_directory(app.static_folder, 'robots.ico')))
+    return utils.set_resp_cache(make_response(send_from_directory(app.static_folder, 'robots.txt')))
 
 
 @app.route('/favicon.ico', methods=['GET'])
