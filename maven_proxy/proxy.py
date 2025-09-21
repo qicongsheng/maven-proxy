@@ -73,17 +73,6 @@ def robots():
     return utils.set_resp_cache(make_response(send_from_directory(app.static_folder, 'robots.txt')))
 
 
-@app.route('/favicon.ico', methods=['GET'])
-def favicon():
-    return utils.set_resp_cache(make_response(send_from_directory(app.static_folder, 'favicon.ico')))
-
-
-@app.route('/webfonts/<path:path>', methods=['GET'])
-@app.route('/css/<path:path>', methods=['GET'])
-def css(path):
-    return utils.set_resp_cache(make_response(send_from_directory(app.static_folder + "/css", path)))
-
-
 @app.route('/api/fetch_errors/query', methods=['GET', 'POST'])
 @auth.login_required
 def get_fetch_errors():
