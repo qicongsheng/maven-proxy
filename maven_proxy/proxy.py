@@ -42,6 +42,11 @@ def show_404_page(e):
     return app.config['MSG_404'], 404
 
 
+@app.errorhandler(400)
+def show_400_page(e):
+    return app.config['MSG_404'], 400
+
+
 # 处理域名路径请求
 @app.route(f'/', methods=['GET'])
 def handle_domain():
