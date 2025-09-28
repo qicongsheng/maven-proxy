@@ -78,57 +78,6 @@ def robots():
     return utils.set_resp_cache(make_response(send_from_directory(app.static_folder, 'robots.txt')))
 
 
-@app.route('/api/fetch_errors/query', methods=['GET', 'POST'])
-@auth.login_required
-def get_fetch_errors():
-    """
-    获取抓取错误记录
-    """
-    try:
-        # 默认获取100条记录
-        limit = request.args.get('limit', 100, type=int)
-        errors = app.db.get_fetch_errors(limit)
-
-        # 格式化返回数据
-        result = []
-        for error in errors:
-            result.append({
-                'id': error[0],
-                'remote_url': error[1],
-                'error_message': error[2],
-                'timestamp': error[3]
-            })
-        return jsonify({
-            'success': True,
-            'data': result,
-            'count': len(result)
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
-
-@app.route('/api/fetch_errors/clear', methods=['GET', 'POST'])
-@auth.login_required
-def clear_fetch_errors():
-    """
-    清空抓取错误记录
-    """
-    try:
-        app.db.clear_fetch_errors()
-        return jsonify({
-            'success': True,
-            'message': 'Fetch errors cleared successfully'
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
-
 # 处理browse路径请求
 @app.route(f'{browse_context_path}/<path:path>', methods=['GET'])
 @auth.login_required
