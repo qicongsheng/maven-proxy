@@ -5,7 +5,7 @@ import os
 import uuid
 
 from flask import request, send_from_directory, abort, Response, \
-    render_template, redirect, session, jsonify, make_response
+    render_template, redirect, session, make_response
 from flask_httpauth import HTTPBasicAuth
 
 from maven_proxy import help
