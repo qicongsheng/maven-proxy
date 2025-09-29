@@ -168,6 +168,7 @@ def generate_directory_listing(path):
 
     return render_template(
         "directory_listing.html",
+        paths=utils.generate_links(path),
         path=path,
         version=help.get_version(),
         repo_context_path=repo_context_path,

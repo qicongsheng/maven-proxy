@@ -80,6 +80,23 @@ def build_remote_path(group_id, artifact_id, version, type):
     return group_id.replace('.', '/') + '/' + artifact_id + '/' + version + '/' + artifact_id + '-' + version + type
 
 
+def generate_links(path):
+    # 去除开头和结尾的斜杠
+    path = path.strip('/')
+    # 如果路径为空（即原路径为 "/" 或 ""）
+    if not path:
+        return []
+    # 分割路径
+    parts = path.split('/')
+    links = []
+    # 逐步构建路径
+    current_parts = []
+    for part in parts:
+        current_parts.append(part)
+        links.append((part, "/" + "/".join(current_parts)))
+    return links
+
+
 # 从远程仓库获取文件
 def fetch_from_remote(path):
     remote_url = app.config['REMOTE_REPO'] + path
