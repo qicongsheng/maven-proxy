@@ -26,6 +26,7 @@ def auto_download_remote_files_by_dirs():
                         group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
                         auto_download_remote_file(root, pom_file_name, '.pom.sha1')
                         auto_download_remote_file(root, pom_file_name, '.pom.md5')
+                        auto_download_remote_file(root, pom_file_name, '.module')
                         # 文件不存在，从远程下载
                         if packaging == 'jar' or packaging == 'bundle':
                             auto_download_remote_file(root, pom_file_name, '.jar')
