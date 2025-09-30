@@ -114,6 +114,8 @@ def handle_get(path):
 # 处理 HEAD 请求
 def handle_head(path):
     local_path = utils.get_local_path(path)
+    if not os.path.exists(local_path):
+        utils.fetch_from_remote(path)
     if os.path.exists(local_path):
         return Response(headers={'Content-Length': os.path.getsize(local_path)})
     abort(404)
