@@ -99,10 +99,12 @@ def generate_links(path):
 
 # 从远程仓库获取文件
 def fetch_from_remote(path):
+    result = False
     for repo in app.config['REMOTE_REPOS']:
         if os.path.exists(get_local_path(path)):
-            return
-        fetch_from_remote_repo(repo, path)
+            return True
+        result = fetch_from_remote_repo(repo, path)
+    return result
 
 
 # 从远程仓库获取文件
