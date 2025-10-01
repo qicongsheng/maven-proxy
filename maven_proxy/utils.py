@@ -116,7 +116,7 @@ def fetch_from_remote_repo(repo, path):
     app.logger.info(f'fetching from remote: {remote_url}')
     try:
         auth = None
-        if repo.get('user') and repo.get('passwd'):
+        if repo.get('user') is not None and repo.get('passwd') is not None:
             auth = (repo.get('user'), repo.get('passwd'))
         resp = requests.get(remote_url, auth=auth, timeout=10)
         if resp.status_code == 200:
