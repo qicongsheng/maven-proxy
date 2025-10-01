@@ -99,18 +99,25 @@ def generate_links(path):
 
 # 从远程仓库获取文件
 def fetch_from_remote(path):
-    remote_url = app.config['REMOTE_REPO'] + path
+    for repo in app.config['REMOTE_REPOS']:
+        if os.path.exists(get_local_path(path)):
+            return
+        fetch_from_remote_repo(repo, path)
+
+
+# 从远程仓库获取文件
+def fetch_from_remote_repo(repo, path):
+    remote_url = repo['url'] + path
     # 检查之前是否抓取失败过，如果失败过则跳过抓取
-    if app.db.has_fetch_failed_before('/' + path):
+    if app.db.has_fetch_failed_before(remote_url):
         if app.config['SKIPLOG_ENABLE']:
             app.logger.info(f'Skipping fetch from remote (failed before): {path}')
         return False
-
     app.logger.info(f'fetching from remote: {remote_url}')
     try:
         auth = None
-        if app.config['REMOTE_REPO_USERNAME'] and app.config['REMOTE_REPO_PASSWORD']:
-            auth = (app.config['REMOTE_REPO_USERNAME'], app.config['REMOTE_REPO_PASSWORD'])
+        if repo['user'] and repo['passwd']:
+            auth = (repo['user'], repo['passwd'])
         resp = requests.get(remote_url, auth=auth, timeout=10)
         if resp.status_code == 200:
             local_path = get_local_path(path)
@@ -122,7 +129,7 @@ def fetch_from_remote(path):
         if resp.status_code == 404:
             # 记录HTTP错误到数据库
             error_msg = f"HTTP {resp.status_code}: {resp.reason}"
-            app.db.record_fetch_error('/' + path, error_msg)
+            app.db.record_fetch_error(remote_url, error_msg)
             app.logger.error(f'fetch failed from remote: {remote_url}, {error_msg}')
             return False
     except Exception as e:

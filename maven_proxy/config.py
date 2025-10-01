@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 # Author: qicongsheng
 import argparse
+import json
 import logging
 import os
 import uuid
@@ -19,10 +20,9 @@ class Config:
         parser.add_argument("--port", type=int, default=int(os.getenv("PORT", 8081)))
         parser.add_argument("--local-repo-dir", type=str,
                             default=os.getenv("LOCAL_REPO_DIR", os.path.expanduser("~/.m2/repository")))
-        parser.add_argument("--remote-repo", type=str,
-                            default=os.getenv("REMOTE_REPO", "https://repo.maven.apache.org/maven2/"))
-        parser.add_argument("--remote-repo-username", type=str, default=os.getenv("REMOTE_REPO_USERNAME", None))
-        parser.add_argument("--remote-repo-password", type=str, default=os.getenv("REMOTE_REPO_PASSWORD", None))
+        parser.add_argument("--remote-repos", type=str,
+                            default=os.getenv("REMOTE_REPOS",
+                                              '[{"url":"https://repo1.maven.org/maven2/","user":"","passwd":""},{"url":"https://plugins.gradle.org/m2/","user":"","passwd":""}]'))
         parser.add_argument("--auth-user", type=str, default=os.getenv("AUTH_USER", "user"))
         parser.add_argument("--auth-password", type=str, default=os.getenv("AUTH_PASSWORD", "passwd"))
         parser.add_argument("--repo-context-path", type=str, default=os.getenv("REPO_CONTEXT_PATH", "/maven2"))
@@ -42,10 +42,7 @@ class Config:
         # 本地仓库路径
         self.REPO_ROOT = args.local_repo_dir + '/repository'
         # 远程Maven仓库
-        self.REMOTE_REPO = args.remote_repo
-        # 远程Maven仓库 认证（可选）
-        self.REMOTE_REPO_USERNAME = args.remote_repo_username
-        self.REMOTE_REPO_PASSWORD = args.remote_repo_password
+        self.REMOTE_REPOS = json.loads(args.remote_repos)
         # 部署用户认证
         self.USERS = {args.auth_user: args.auth_password}
         # repo上下文路径（如 /maven2）

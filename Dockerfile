@@ -1,10 +1,13 @@
+# =================================
+# REMOTE_REPO='[{"url":"https://repo1.maven.org/maven2/","user":"","passwd":""},{"url":"https://plugins.gradle.org/m2/","user":"","passwd":""}]'
+# =================================
 FROM registry.mozu.eu.org/qics/python:3.9.21-alpine3.20
 MAINTAINER qicongsheng
 
 ENV PORT=8081 \
     AUTH_USER=user \
     AUTH_PASSWORD=passwd \
-    REMOTE_REPO=https://repo.maven.apache.org/maven2/ \
+    REMOTE_REPO='[{"url":"https://repo1.maven.org/maven2/"},{"url":"https://plugins.gradle.org/m2/"}]' \
     REMOTE_REPO_USERNAME= \
     REMOTE_REPO_PASSWORD= \
     REPO_CONTEXT_PATH=/maven2 \

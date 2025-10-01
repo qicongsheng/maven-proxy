@@ -224,7 +224,7 @@ def startup():
     print(f"repo_context_path={app.config['REPO_CONTEXT_PATH']}")
     print(f"browse_context_path={app.config['BROWSE_CONTEXT_PATH']}")
     print(f"local_repo_dir={config.REPO_ROOT}")
-    print(f"remote_repo={config.REMOTE_REPO}")
+    print(f"remote_repo={config.REMOTE_REPOS}")
     # 初始化定时任务
     job.start()
     app.run(host='0.0.0.0', port=config.PORT, threaded=True)
