@@ -6,6 +6,7 @@ import threading
 import time
 import traceback
 
+import maven_proxy.task as task
 from maven_proxy import utils
 from maven_proxy.config import app_config as config
 
@@ -24,22 +25,24 @@ def auto_download_remote_files_by_dirs():
                 if pom_file_path.lower().endswith('.pom'):
                     try:
                         group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
-                        auto_download_remote_file(root, pom_file_name, '.pom.sha1')
-                        auto_download_remote_file(root, pom_file_name, '.pom.md5')
-                        auto_download_remote_file(root, pom_file_name, '.module')
-                        auto_download_remote_file(root, pom_file_name, '.module.sha1')
-                        auto_download_remote_file(root, pom_file_name, '.module.md5')
+                        tasks = []
+                        tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '.pom.sha1'))
+                        tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '.pom.md5'))
+                        tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '.module'))
+                        tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '.module.sha1'))
+                        tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '.module.md5'))
                         # 文件不存在，从远程下载
                         if packaging == 'jar' or packaging == 'bundle':
-                            auto_download_remote_file(root, pom_file_name, '.jar')
-                            auto_download_remote_file(root, pom_file_name, '.jar.sha1')
-                            auto_download_remote_file(root, pom_file_name, '.jar.md5')
-                            auto_download_remote_file(root, pom_file_name, '-sources.jar')
-                            auto_download_remote_file(root, pom_file_name, '-sources.jar.sha1')
-                            auto_download_remote_file(root, pom_file_name, '-sources.jar.md5')
-                            auto_download_remote_file(root, pom_file_name, '-javadoc.jar')
-                            auto_download_remote_file(root, pom_file_name, '-javadoc.jar.sha1')
-                            auto_download_remote_file(root, pom_file_name, '-javadoc.jar.md5')
+                            tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '.jar'))
+                            tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '.jar.sha1'))
+                            tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '.jar.md5'))
+                            tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '-sources.jar'))
+                            tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '-sources.jar.sha1'))
+                            tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '-sources.jar.md5'))
+                            tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '-javadoc.jar'))
+                            tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '-javadoc.jar.sha1'))
+                            tasks.append(lambda: auto_download_remote_file(root, pom_file_name, '-javadoc.jar.md5'))
+                        task.run_tasks_concurrently(tasks)
                     except:
                         traceback.print_exc()
         app.logger.info("Auto download remote files end.")
