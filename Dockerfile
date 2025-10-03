@@ -5,6 +5,7 @@ FROM registry.mozu.eu.org/qics/python:3.9.21-alpine3.20
 MAINTAINER qicongsheng
 
 ENV PORT=8081 \
+    SKIP_AUTH=false \
     AUTH_USER=user \
     AUTH_PASSWORD=passwd \
     REMOTE_REPOS='[{"url":"https://repo1.maven.org/maven2/"},{"url":"https://plugins.gradle.org/m2/"}]' \

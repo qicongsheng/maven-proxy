@@ -23,6 +23,8 @@ browse_context_path = app.config['BROWSE_CONTEXT_PATH']
 # 验证用户
 @auth.verify_password
 def verify_password(username, password):
+    if app.config['SKIP_AUTH']:
+        return "skip_auth"
     if 'user_id' in session:
         return session['user_id']
     if username in app.config['USERS'] and app.config['USERS'][username] == password:

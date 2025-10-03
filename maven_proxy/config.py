@@ -35,6 +35,7 @@ class Config:
                             default=int(os.getenv("PERMANENT_SESSION_LIFETIME", 60 * 24)))
         parser.add_argument("--msg-404", type=str, default=os.getenv("MSG_404", "Not Found"))
         parser.add_argument("--skiplog-enable", type=str, default=os.getenv("SKIPLOG_ENABLE", "false"))
+        parser.add_argument("--skip-auth", type=str, default=os.getenv("SKIP_AUTH", "false"))
         args = parser.parse_args()
 
         # 本地仓库端口
@@ -57,6 +58,7 @@ class Config:
         self.MSG_404 = args.msg_404
         self.DATABASE_FILE_PATH = args.local_repo_dir + '/database.db'
         self.SKIPLOG_ENABLE = True if 'true' == args.skiplog_enable else False
+        self.SKIP_AUTH = True if 'true' == args.skip_auth else False
 
         app = Flask(__name__)
         app.db = db.DB(database_file_path=self.DATABASE_FILE_PATH)
