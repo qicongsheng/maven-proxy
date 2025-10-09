@@ -52,7 +52,7 @@ def show_400_page(e):
 # 处理域名路径请求
 @app.route(f'/', methods=['GET'])
 def handle_domain():
-    return redirect('/browse')
+    return redirect(f'{browse_context_path}')
 
 
 # 处理根路径请求
@@ -70,7 +70,7 @@ def login():
         if verify_password(username, password):
             session['user_id'] = str(uuid.uuid4())
             session.permanent = True  # 启用超时设置
-            return redirect('/browse')
+            return redirect(f'{browse_context_path}')
         return "无效的凭据", 401
     return render_template("login.html", version=help.get_version())
 
