@@ -1,5 +1,7 @@
 maven2 repository by py
 
+A lightweight Maven repository implemented in Python. Supports downloading and uploading dependency jar packages. Dependency jar files and pom files are stored in disk folders, which is convenient for manually uploading local dependencies. Extremely low resource consumption.
+
 ## Example Usage
 pip3 install maven-proxy
 
