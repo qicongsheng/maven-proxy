@@ -1,6 +1,6 @@
 <p align="center">
 	<img src="https://raw.githubusercontent.com/qicongsheng/maven-proxy/refs/heads/main/screenshot/favicon.ico" style="max-width: 20%;">
-	<br>
+	<br><br>
     <img src="https://img.shields.io/badge/version-1.2.88-green.svg?style=for-the-badge">
 </p>
 
