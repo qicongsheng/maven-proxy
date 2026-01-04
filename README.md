@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="https://raw.githubusercontent.com/qicongsheng/maven-proxy/refs/heads/main/screenshot/favicon.ico">
+	<img src="https://raw.githubusercontent.com/qicongsheng/maven-proxy/refs/heads/main/screenshot/favicon.ico" style="max-width: 20%;">
 	<br>
 </p>
 
