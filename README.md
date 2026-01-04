@@ -1,4 +1,7 @@
-# Maven-Proxy
+<p align="center">
+	<img src="https://raw.githubusercontent.com/qicongsheng/maven-proxy/refs/heads/main/screenshot/favicon.ico">
+	<br>
+</p>
 
 A lightweight Maven repository(with proxy) implemented in Python. Supports downloading and uploading dependency jar packages. Dependency jar files and pom files are stored in disk folders, which is convenient for manually uploading local dependencies. Extremely low resource consumption.
 
