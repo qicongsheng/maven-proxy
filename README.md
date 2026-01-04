@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="https://raw.githubusercontent.com/qicongsheng/maven-proxy/refs/heads/main/screenshot/favicon.ico" style="max-width: 20%;"><span style="font-size: 40px; color: #fba504; font-weight: bold; letter-spacing: -2px; margin-bottom: 10px;">&nbsp;Maven Proxy</span>
+	<img src="https://raw.githubusercontent.com/qicongsheng/maven-proxy/refs/heads/main/screenshot/favicon.ico" style="max-width: 20%;">
 	<br><br>
     <img src="https://img.shields.io/badge/version-1.2.89-green.svg?style=for-the-badge">
 </p>
