@@ -1,7 +1,11 @@
-.idea
-*/*.iml
-*.iml
 .DS_Store
+.idea
+.venv
+dist
+*.iml
 */target
-.idea/*
-.idea/vcs.xml
+*.egg-info
+logs/*
+*/src/swagger
+*/src/swagger.md
+rebel.xml
