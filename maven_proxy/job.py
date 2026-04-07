@@ -38,8 +38,8 @@ def auto_download_remote_files_by_dirs():
                     except:
                         traceback.print_exc()
         # 批量执行，每批10个线程
-        app.logger.info(f"Collected {len(tasks)} download tasks, executing in batches of 200...")
-        task.run_tasks_in_batches(tasks, batch_size=200, logger=app.logger)
+        app.logger.info(f"Collected {len(tasks)} download tasks, executing in batches of 2000...")
+        task.run_tasks_in_batches(tasks, batch_size=2000, logger=app.logger)
         app.logger.info("Auto download remote files end.")
         time.sleep(app.config['AUTO_DOWNLOAD_INTERVAL'])
 
