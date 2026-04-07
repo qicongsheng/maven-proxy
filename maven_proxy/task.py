@@ -5,6 +5,13 @@ import threading
 from typing import List, Callable, Any
 
 
+def run_tasks_in_batches(tasks: List[Callable], batch_size: int = 20) -> List[Any]:
+    results = []
+    for i in range(0, len(tasks), batch_size):
+        results.extend(run_tasks_concurrently(tasks[i:i + batch_size]))
+    return results
+
+
 def run_tasks_concurrently(tasks: List[Callable]) -> List[Any]:
     """
     简化版的并发任务执行器
