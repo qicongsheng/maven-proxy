@@ -70,4 +70,3 @@ class DB:
     def close(self):
         """关闭所有数据库连接"""
         self.pool.close_all()
-

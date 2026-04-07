@@ -5,7 +5,7 @@ import threading
 from typing import List, Callable, Any
 
 
-def run_tasks_in_batches(tasks: List[Callable], batch_size: int = 2000, logger=None) -> List[Any]:
+def run_tasks_in_batches(tasks: List[Callable], batch_size: int = 100, logger=None) -> List[Any]:
     results = []
     total = len(tasks)
     for i_ in range(0, total, batch_size):

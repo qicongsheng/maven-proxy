@@ -34,12 +34,14 @@ def auto_download_remote_files_by_dirs():
                         for file_type in file_types:
                             target_file = utils.replace_last_occurrence(pom_file_name, '.pom', file_type)
                             if not os.path.exists(os.path.join(root, target_file)):
-                                tasks.append(lambda _root=root, _pom=pom_file_name, _ft=file_type: auto_download_remote_file(_root, _pom, _ft))
+                                tasks.append(
+                                    lambda _root=root, _pom=pom_file_name, _ft=file_type: auto_download_remote_file(
+                                        _root, _pom, _ft))
                     except:
                         traceback.print_exc()
-        # 批量执行，每批10个线程
-        app.logger.info(f"Collected {len(tasks)} download tasks, executing in batches of 2000...")
-        task.run_tasks_in_batches(tasks, batch_size=2000, logger=app.logger)
+        # 批量执行，每批100个线程
+        app.logger.info(f"Collected {len(tasks)} download tasks, executing in batches of 100...")
+        task.run_tasks_in_batches(tasks, batch_size=100, logger=app.logger)
         app.logger.info("Auto download remote files end.")
         time.sleep(app.config['AUTO_DOWNLOAD_INTERVAL'])
 
