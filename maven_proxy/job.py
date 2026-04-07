@@ -26,21 +26,15 @@ def auto_download_remote_files_by_dirs():
                 if pom_file_path.lower().endswith('.pom'):
                     try:
                         group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
-                        tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '.pom.sha1'))
-                        tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '.pom.md5'))
-                        tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '.module'))
-                        tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '.module.sha1'))
-                        tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '.module.md5'))
-                        if packaging == 'jar' or packaging == 'bundle':
-                            tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '.jar'))
-                            tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '.jar.sha1'))
-                            tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '.jar.md5'))
-                            tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '-sources.jar'))
-                            tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '-sources.jar.sha1'))
-                            tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '-sources.jar.md5'))
-                            tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '-javadoc.jar'))
-                            tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '-javadoc.jar.sha1'))
-                            tasks.append(lambda _root=root, _pom=pom_file_name: auto_download_remote_file(_root, _pom, '-javadoc.jar.md5'))
+                        file_types = ['.pom.sha1', '.pom.md5', '.module', '.module.sha1', '.module.md5']
+                        if packaging in ('jar', 'bundle'):
+                            file_types += ['.jar', '.jar.sha1', '.jar.md5',
+                                           '-sources.jar', '-sources.jar.sha1', '-sources.jar.md5',
+                                           '-javadoc.jar', '-javadoc.jar.sha1', '-javadoc.jar.md5']
+                        for file_type in file_types:
+                            target_file = utils.replace_last_occurrence(pom_file_name, '.pom', file_type)
+                            if not os.path.exists(os.path.join(root, target_file)):
+                                tasks.append(lambda _root=root, _pom=pom_file_name, _ft=file_type: auto_download_remote_file(_root, _pom, _ft))
                     except:
                         traceback.print_exc()
         # 批量执行，每批10个线程
@@ -52,16 +46,11 @@ def auto_download_remote_files_by_dirs():
 
 # 自动下载指定文件
 def auto_download_remote_file(root, pom_file_name, file_type):
-    pom_file_path = os.path.join(root, pom_file_name)
     try:
-        if not pom_file_path.lower().endswith('.pom'):
-            return
+        pom_file_path = os.path.join(root, pom_file_name)
         group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
-        target_file = utils.replace_last_occurrence(pom_file_name, '.pom', file_type)
-        # 文件不存在，从远程下载
-        if not os.path.exists(os.path.join(root, target_file)):
-            remote_path = utils.build_remote_path(group_id, artifact_id, version, file_type)
-            utils.fetch_from_remote(remote_path)
+        remote_path = utils.build_remote_path(group_id, artifact_id, version, file_type)
+        utils.fetch_from_remote(remote_path)
     except Exception as e:
         app.logger.error(f"Failed to auto download remote file {pom_file_name}: {e}")
 
