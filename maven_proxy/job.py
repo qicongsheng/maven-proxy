@@ -26,6 +26,8 @@ def auto_download_remote_files_by_dirs():
                 if pom_file_path.lower().endswith('.pom'):
                     try:
                         group_id, artifact_id, version, packaging = utils.parse_pom_xml(pom_file_path)
+                        if group_id is None or artifact_id is None or version is None:
+                            continue
                         file_types = ['.pom.sha1', '.pom.md5', '.module', '.module.sha1', '.module.md5']
                         if packaging in ('jar', 'bundle'):
                             file_types += ['.jar', '.jar.sha1', '.jar.md5',

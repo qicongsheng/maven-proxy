@@ -147,7 +147,9 @@ def parse_pom_xml(xml_file):
         root = tree.getroot()
 
         # 检查是否是有效的POM文件
-        if root.tag not in ['{http://maven.apache.org/POM/4.0.0}project', 'project']:
+        valid_tags = ['{http://maven.apache.org/POM/4.0.0}project',
+                      '{https://maven.apache.org/POM/4.0.0}project', 'project']
+        if root.tag not in valid_tags:
             app.logger.error(f"跳过非POM文件: {xml_file} (根元素: {root.tag})")
             return None, None, None, None
 
@@ -156,6 +158,10 @@ def parse_pom_xml(xml_file):
         artifact_id = None
         version = None
         packaging = "jar"  # Maven默认打包类型是jar
+
+        # 根据实际命名空间构建 ns
+        if root.tag.startswith('{https://'):
+            ns = {'mvn': 'https://maven.apache.org/POM/4.0.0'}
 
         # 处理带命名空间的POM
         if root.tag.startswith('{'):
