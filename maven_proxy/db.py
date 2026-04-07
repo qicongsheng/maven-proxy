@@ -60,6 +60,18 @@ class DB:
         self._execute('INSERT INTO fetch_errors (remote_url, error_message, timestamp)VALUES (?, ?, ?)',
                       (file_path, error_message, int(time.time())))
 
+    def get_failed_urls(self, urls: list, batch_size: int = 500) -> set:
+        if not urls:
+            return set()
+        failed = set()
+        for i in range(0, len(urls), batch_size):
+            batch = urls[i:i + batch_size]
+            placeholders = ','.join('?' * len(batch))
+            result = self._execute(f'SELECT remote_url FROM fetch_errors WHERE remote_url IN ({placeholders})', batch)
+            if result:
+                failed.update(row[0] for row in result)
+        return failed
+
     def has_fetch_failed_before(self, remote_url):
         """
         检查指定的URL是否之前抓取失败过

@@ -18,8 +18,8 @@ def auto_download_remote_files_by_dirs():
     time.sleep(5)
     while True:
         app.logger.info("Starting auto download remote files...")
-        # 遍历 REPO_ROOT 目录，收集所有任务
-        tasks = []
+        # 遍历 REPO_ROOT 目录，收集候选项
+        candidates = []  # (root, pom_file_name, file_type, remote_path)
         for root, dirs, files in os.walk(app.config['REPO_ROOT'], topdown=False):
             for pom_file_name in files:
                 pom_file_path = os.path.join(root, pom_file_name)
@@ -34,11 +34,20 @@ def auto_download_remote_files_by_dirs():
                         for file_type in file_types:
                             target_file = utils.replace_last_occurrence(pom_file_name, '.pom', file_type)
                             if not os.path.exists(os.path.join(root, target_file)):
-                                tasks.append(
-                                    lambda _root=root, _pom=pom_file_name, _ft=file_type: auto_download_remote_file(
-                                        _root, _pom, _ft))
+                                remote_path = utils.build_remote_path(group_id, artifact_id, version, file_type)
+                                candidates.append((root, pom_file_name, file_type, remote_path))
                     except:
                         traceback.print_exc()
+        # 批量查询 fetch_errors，过滤掉所有 repo 都失败过的
+        remote_repos = app.config['REMOTE_REPOS']
+        all_remote_urls = [repo['url'] + remote_path for _, _, _, remote_path in candidates for repo in remote_repos]
+        failed_urls = app.db.get_failed_urls(all_remote_urls)
+        tasks = []
+        for root, pom_file_name, file_type, remote_path in candidates:
+            if all(repo['url'] + remote_path in failed_urls for repo in remote_repos):
+                continue
+            tasks.append(
+                lambda _root=root, _pom=pom_file_name, _ft=file_type: auto_download_remote_file(_root, _pom, _ft))
         # 批量执行，每批100个线程
         app.logger.info(f"Collected {len(tasks)} download tasks, executing in batches of 100...")
         task.run_tasks_in_batches(tasks, batch_size=100, logger=app.logger)
