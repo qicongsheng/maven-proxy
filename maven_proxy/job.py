@@ -40,6 +40,7 @@ def auto_download_remote_files_by_dirs():
                                 candidates.append((root, pom_file_name, file_type, remote_path))
                     except:
                         traceback.print_exc()
+        candidates.sort(key=lambda c: c[3])
         # 批量查询 fetch_errors，过滤掉所有 repo 都失败过的
         remote_repos = app.config['REMOTE_REPOS']
         all_remote_urls = [repo['url'] + remote_path for _, _, _, remote_path in candidates for repo in remote_repos]
