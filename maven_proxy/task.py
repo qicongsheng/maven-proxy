@@ -5,10 +5,14 @@ import threading
 from typing import List, Callable, Any
 
 
-def run_tasks_in_batches(tasks: List[Callable], batch_size: int = 200) -> List[Any]:
+def run_tasks_in_batches(tasks: List[Callable], batch_size: int = 200, logger=None) -> List[Any]:
     results = []
-    for i in range(0, len(tasks), batch_size):
+    total = len(tasks)
+    for i in range(0, total, batch_size):
         results.extend(run_tasks_concurrently(tasks[i:i + batch_size]))
+        done = min(i + batch_size, total)
+        if logger:
+            logger.info(f"Progress: {done}/{total} tasks completed.")
     return results
 
 
