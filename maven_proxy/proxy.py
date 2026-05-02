@@ -80,6 +80,11 @@ def robots():
     return utils.set_resp_cache(make_response(send_from_directory(app.static_folder, 'robots.txt')))
 
 
+@app.route('/favicon.ico', methods=['GET'])
+def favicon():
+    return utils.set_resp_cache(make_response(send_from_directory(app.static_folder, 'favicon.ico')))
+
+
 # 处理browse路径请求
 @app.route(f'{browse_context_path}/<path:path>', methods=['GET'])
 @auth.login_required
